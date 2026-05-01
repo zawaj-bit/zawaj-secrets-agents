@@ -1,0 +1,1403 @@
+<!DOCTYPE html>
+<html lang="fr">
+<head>
+<meta charset="UTF-8">
+<meta name="viewport" content="width=device-width, initial-scale=1.0, viewport-fit=cover">
+<title>Zawaj Secret's — CEO</title>
+<link rel="manifest" href="manifest.json">
+<meta name="theme-color" content="#E8437A">
+<meta name="apple-mobile-web-app-capable" content="yes">
+<meta name="apple-mobile-web-app-status-bar-style" content="black-translucent">
+<meta name="apple-mobile-web-app-title" content="Zawaj CEO">
+<link rel="preconnect" href="https://fonts.googleapis.com">
+<link rel="preconnect" href="https://fonts.gstatic.com" crossorigin>
+<link href="https://fonts.googleapis.com/css2?family=Cormorant+Garamond:ital,wght@0,400;0,500;0,600;0,700;1,400;1,600&family=DM+Sans:opsz,wght@9..40,300;9..40,400;9..40,500;9..40,600&display=swap" rel="stylesheet">
+<style>
+:root {
+  --rose: #E8437A;
+  --rose-dark: #C4365F;
+  --rose-mid: #F2C4CE;
+  --rose-light: #FFF0F5;
+  --rose-pale: #FFF5FA;
+  --white: #FFFFFF;
+  --text: #1A1020;
+  --text-2: #6B5B6E;
+  --text-3: #A89BB0;
+  --border: rgba(232,67,122,0.15);
+  --shadow: 0 2px 16px rgba(232,67,122,0.12);
+  --shadow-lg: 0 8px 40px rgba(232,67,122,0.18);
+  --r: 16px;
+  --r-sm: 10px;
+  --nav-h: 80px;
+  --safe-b: env(safe-area-inset-bottom, 0px);
+}
+*,*::before,*::after{box-sizing:border-box;margin:0;padding:0;-webkit-tap-highlight-color:transparent}
+html,body{height:100%;overflow:hidden;background:var(--rose-pale)}
+body{font-family:'DM Sans',sans-serif;color:var(--text);max-width:430px;margin:0 auto;position:relative}
+#app{height:100dvh;display:flex;flex-direction:column;overflow:hidden}
+
+/* ── HEADER ── */
+.header{padding:calc(env(safe-area-inset-top,20px) + 12px) 20px 12px;background:var(--white);border-bottom:1px solid var(--border);display:flex;align-items:center;justify-content:space-between;position:relative;z-index:10;flex-shrink:0}
+.header-left h1{font-family:'Cormorant Garamond',serif;font-size:22px;font-weight:600;color:var(--rose);line-height:1}
+.header-left p{font-size:11px;color:var(--text-2);margin-top:2px;font-weight:400}
+.header-badge{background:var(--rose);color:white;border-radius:20px;padding:4px 10px;font-size:11px;font-weight:500}
+
+/* ── SCREENS ── */
+.screens{flex:1;overflow:hidden;position:relative}
+.screen{position:absolute;inset:0;overflow-y:auto;-webkit-overflow-scrolling:touch;padding:16px 16px calc(var(--nav-h) + var(--safe-b) + 8px);opacity:0;pointer-events:none;transform:translateY(8px);transition:opacity 0.25s ease,transform 0.25s ease}
+.screen.active{opacity:1;pointer-events:auto;transform:translateY(0)}
+
+/* ── BOTTOM NAV ── */
+.bottom-nav{height:calc(var(--nav-h) + var(--safe-b));background:var(--white);border-top:1px solid var(--border);display:flex;align-items:flex-start;padding-top:8px;padding-bottom:var(--safe-b);flex-shrink:0;position:relative;z-index:10}
+.nav-item{flex:1;display:flex;flex-direction:column;align-items:center;gap:3px;cursor:pointer;padding:4px 0;transition:all 0.2s}
+.nav-icon{width:26px;height:26px;display:flex;align-items:center;justify-content:center;border-radius:8px;transition:all 0.2s}
+.nav-item.active .nav-icon{background:var(--rose-light)}
+.nav-item svg{width:20px;height:20px;stroke:var(--text-3);transition:stroke 0.2s;fill:none;stroke-width:1.8;stroke-linecap:round;stroke-linejoin:round}
+.nav-item.active svg{stroke:var(--rose)}
+.nav-label{font-size:10px;color:var(--text-3);font-weight:400;transition:color 0.2s;letter-spacing:0.02em}
+.nav-item.active .nav-label{color:var(--rose);font-weight:500}
+
+/* ── CARDS ── */
+.card{background:var(--white);border-radius:var(--r);padding:16px;box-shadow:var(--shadow);margin-bottom:12px}
+.card-sm{background:var(--white);border-radius:var(--r-sm);padding:12px;box-shadow:0 1px 8px rgba(232,67,122,0.08)}
+.section-title{font-family:'Cormorant Garamond',serif;font-size:18px;font-weight:600;color:var(--text);margin-bottom:12px}
+.section-title span{color:var(--rose)}
+
+/* ── HOME — KPIs ── */
+.kpi-grid{display:grid;grid-template-columns:1fr 1fr;gap:10px;margin-bottom:16px}
+.kpi-card{background:var(--white);border-radius:var(--r);padding:14px 16px;box-shadow:var(--shadow);position:relative;overflow:hidden}
+.kpi-card::before{content:'';position:absolute;top:-10px;right:-10px;width:50px;height:50px;background:var(--rose-light);border-radius:50%}
+.kpi-val{font-family:'Cormorant Garamond',serif;font-size:28px;font-weight:700;color:var(--rose);line-height:1}
+.kpi-label{font-size:11px;color:var(--text-2);margin-top:4px;font-weight:400}
+.kpi-delta{font-size:10px;color:#22c55e;font-weight:500;margin-top:2px}
+
+/* HOME — ALERTS */
+.alert-card{border-radius:var(--r);padding:14px 16px;margin-bottom:10px;cursor:pointer;border:1px solid transparent;transition:transform 0.15s,box-shadow 0.15s}
+.alert-card:active{transform:scale(0.98)}
+.alert-urgent{background:linear-gradient(135deg,#FFF0F5,#FFE4ED);border-color:rgba(232,67,122,0.3)}
+.alert-promo{background:linear-gradient(135deg,#FFF8F0,#FFE8D0);border-color:rgba(251,146,60,0.3)}
+.alert-normal{background:linear-gradient(135deg,#F0F4FF,#E4EDFF);border-color:rgba(99,102,241,0.2)}
+.alert-header{display:flex;align-items:center;gap:8px;margin-bottom:4px}
+.alert-dot{width:8px;height:8px;border-radius:50%;flex-shrink:0;animation:pulse 2s infinite}
+.alert-urgent .alert-dot{background:var(--rose)}
+.alert-promo .alert-dot{background:#f97316}
+.alert-normal .alert-dot{background:#6366f1}
+@keyframes pulse{0%,100%{opacity:1}50%{opacity:0.4}}
+.alert-title{font-size:13px;font-weight:600;color:var(--text)}
+.alert-body{font-size:12px;color:var(--text-2);line-height:1.5}
+.alert-tag{display:inline-block;padding:2px 8px;border-radius:20px;font-size:10px;font-weight:600;background:var(--rose);color:white;margin-top:6px}
+.alert-promo .alert-tag{background:#f97316}
+.alert-normal .alert-tag{background:#6366f1}
+
+/* ── CALENDAR ── */
+.cal-header{display:flex;align-items:center;justify-content:space-between;margin-bottom:16px}
+.cal-title{font-family:'Cormorant Garamond',serif;font-size:22px;font-weight:600;color:var(--text)}
+.cal-nav{display:flex;gap:8px}
+.cal-nav button{width:32px;height:32px;border:none;background:var(--rose-light);border-radius:8px;cursor:pointer;color:var(--rose);font-size:14px;display:flex;align-items:center;justify-content:center}
+.cal-grid{display:grid;grid-template-columns:repeat(7,1fr);gap:2px}
+.cal-day-header{text-align:center;font-size:10px;color:var(--text-3);font-weight:500;padding:4px 0;text-transform:uppercase;letter-spacing:0.05em}
+.cal-day{aspect-ratio:1;display:flex;flex-direction:column;align-items:center;justify-content:center;border-radius:8px;cursor:pointer;position:relative;transition:background 0.15s}
+.cal-day:hover{background:var(--rose-light)}
+.cal-day.today{background:var(--rose);border-radius:50%}
+.cal-day.today .cal-num{color:white;font-weight:600}
+.cal-day.has-event .cal-dot{position:absolute;bottom:3px;left:50%;transform:translateX(-50%);width:4px;height:4px;border-radius:50%;background:var(--rose)}
+.cal-day.today.has-event .cal-dot{background:white}
+.cal-day.event-special{background:var(--rose-light)}
+.cal-day.event-french{background:#FFF3E8}
+.cal-num{font-size:12px;color:var(--text);font-weight:400}
+.cal-day.other-month .cal-num{color:var(--text-3)}
+.events-list{margin-top:16px}
+.event-item{display:flex;align-items:flex-start;gap:10px;padding:10px 0;border-bottom:1px solid var(--border)}
+.event-item:last-child{border-bottom:none}
+.event-date{background:var(--rose-light);border-radius:8px;padding:4px 8px;text-align:center;min-width:42px;flex-shrink:0}
+.event-date .d{font-family:'Cormorant Garamond',serif;font-size:18px;font-weight:700;color:var(--rose);line-height:1}
+.event-date .m{font-size:9px;color:var(--rose);text-transform:uppercase;letter-spacing:0.05em}
+.event-info .ev-title{font-size:13px;font-weight:500;color:var(--text)}
+.event-info .ev-desc{font-size:11px;color:var(--text-2);margin-top:2px}
+.event-badge{display:inline-block;padding:1px 7px;border-radius:10px;font-size:10px;font-weight:600;color:white;margin-top:4px}
+.badge-rose{background:var(--rose)}
+.badge-orange{background:#f97316}
+.badge-purple{background:#6366f1}
+.badge-green{background:#22c55e}
+
+/* ── TASKS ── */
+.progress-wrap{margin-bottom:16px}
+.progress-bar-bg{height:8px;background:var(--rose-light);border-radius:20px;overflow:hidden}
+.progress-bar-fill{height:100%;background:linear-gradient(90deg,var(--rose),#FF6B9D);border-radius:20px;transition:width 0.5s ease}
+.progress-label{display:flex;justify-content:space-between;font-size:11px;color:var(--text-2);margin-top:6px}
+
+.task-group{margin-bottom:20px}
+.task-group-title{font-size:11px;font-weight:600;color:var(--text-3);text-transform:uppercase;letter-spacing:0.08em;margin-bottom:8px}
+.task-item{display:flex;align-items:center;gap:12px;padding:12px 14px;background:var(--white);border-radius:var(--r-sm);margin-bottom:6px;box-shadow:0 1px 6px rgba(232,67,122,0.07);cursor:pointer;transition:all 0.15s}
+.task-item:active{transform:scale(0.99)}
+.task-check{width:20px;height:20px;border-radius:6px;border:2px solid var(--rose-mid);display:flex;align-items:center;justify-content:center;flex-shrink:0;transition:all 0.2s;background:white}
+.task-check.checked{background:var(--rose);border-color:var(--rose)}
+.task-check svg{width:11px;height:11px;stroke:white;fill:none;stroke-width:2.5;stroke-linecap:round;stroke-linejoin:round;opacity:0;transition:opacity 0.15s}
+.task-check.checked svg{opacity:1}
+.task-text{flex:1;font-size:13px;color:var(--text);font-weight:400;transition:all 0.2s}
+.task-item.done .task-text{text-decoration:line-through;color:var(--text-3)}
+.task-priority{font-size:10px;padding:2px 7px;border-radius:10px;font-weight:600;flex-shrink:0}
+.prio-high{background:#FFF0F5;color:var(--rose)}
+.prio-med{background:#FFF8F0;color:#f97316}
+.prio-low{background:#F0F4FF;color:#6366f1}
+
+.add-task-row{display:flex;gap:8px;margin-top:4px}
+.add-task-input{flex:1;border:1.5px solid var(--border);border-radius:var(--r-sm);padding:10px 12px;font-size:13px;color:var(--text);background:var(--white);font-family:'DM Sans',sans-serif;outline:none;transition:border-color 0.2s}
+.add-task-input:focus{border-color:var(--rose)}
+.add-task-btn{background:var(--rose);color:white;border:none;border-radius:var(--r-sm);padding:0 16px;font-size:13px;font-weight:500;cursor:pointer;font-family:'DM Sans',sans-serif;transition:background 0.15s}
+.add-task-btn:active{background:var(--rose-dark)}
+
+/* ── AGENTS ── */
+.agent-grid{display:grid;grid-template-columns:1fr 1fr;gap:10px}
+.agent-card{background:var(--white);border-radius:var(--r);padding:16px 14px;box-shadow:var(--shadow);cursor:pointer;transition:all 0.2s;position:relative;overflow:hidden;border:1.5px solid transparent}
+.agent-card:active{transform:scale(0.97);border-color:var(--rose)}
+.agent-card::after{content:'';position:absolute;bottom:-12px;right:-12px;width:48px;height:48px;background:var(--rose-light);border-radius:50%}
+.agent-emoji{font-size:28px;margin-bottom:8px;display:block}
+.agent-name{font-size:13px;font-weight:600;color:var(--text);line-height:1.3}
+.agent-desc{font-size:11px;color:var(--text-2);margin-top:4px;line-height:1.4}
+.agent-tag{display:inline-block;margin-top:8px;font-size:10px;font-weight:600;color:var(--rose);background:var(--rose-light);padding:2px 8px;border-radius:20px}
+.agent-card-full{grid-column:1/-1;display:flex;align-items:center;gap:14px}
+.agent-card-full .agent-emoji{font-size:36px;margin:0;flex-shrink:0}
+.agent-card-full .agent-info{flex:1}
+
+/* ── MODAL CHAT ── */
+.modal-overlay{position:fixed;inset:0;background:rgba(0,0,0,0);pointer-events:none;z-index:100;transition:background 0.3s}
+.modal-overlay.open{background:rgba(0,0,0,0.5);pointer-events:auto}
+.modal-sheet{position:absolute;bottom:0;left:0;right:0;background:var(--white);border-radius:24px 24px 0 0;max-height:92dvh;display:flex;flex-direction:column;transform:translateY(100%);transition:transform 0.35s cubic-bezier(0.32,0.72,0,1)}
+.modal-overlay.open .modal-sheet{transform:translateY(0)}
+.modal-drag{width:40px;height:4px;background:var(--rose-mid);border-radius:2px;margin:10px auto 0}
+.modal-header{padding:12px 20px 14px;border-bottom:1px solid var(--border);display:flex;align-items:center;justify-content:space-between;flex-shrink:0}
+.modal-agent-info{display:flex;align-items:center;gap:10px}
+.modal-emoji{font-size:28px;background:var(--rose-light);border-radius:12px;width:44px;height:44px;display:flex;align-items:center;justify-content:center}
+.modal-agent-name{font-size:15px;font-weight:600;color:var(--text)}
+.modal-agent-role{font-size:11px;color:var(--text-2)}
+.modal-close{width:32px;height:32px;border:none;background:var(--rose-light);border-radius:50%;cursor:pointer;color:var(--rose);font-size:16px;display:flex;align-items:center;justify-content:center}
+.chat-messages{flex:1;overflow-y:auto;-webkit-overflow-scrolling:touch;padding:16px;display:flex;flex-direction:column;gap:10px;min-height:200px}
+.msg{max-width:82%;line-height:1.5}
+.msg-user{align-self:flex-end;background:var(--rose);color:white;border-radius:18px 18px 4px 18px;padding:10px 14px;font-size:13px}
+.msg-assistant{align-self:flex-start;background:var(--rose-pale);color:var(--text);border-radius:18px 18px 18px 4px;padding:10px 14px;font-size:13px;border:1px solid var(--border)}
+.msg-typing{display:flex;gap:4px;padding:14px}
+.typing-dot{width:6px;height:6px;border-radius:50%;background:var(--rose-mid);animation:typing 1.4s infinite}
+.typing-dot:nth-child(2){animation-delay:0.2s}
+.typing-dot:nth-child(3){animation-delay:0.4s}
+@keyframes typing{0%,80%,100%{transform:translateY(0)}40%{transform:translateY(-6px)}}
+.quick-prompts{padding:10px 16px;border-top:1px solid var(--border);display:flex;gap:6px;overflow-x:auto;-webkit-overflow-scrolling:touch;scrollbar-width:none;flex-shrink:0}
+.quick-prompts::-webkit-scrollbar{display:none}
+.quick-btn{flex-shrink:0;padding:6px 12px;border-radius:20px;border:1.5px solid var(--border);background:white;font-size:11px;font-weight:500;color:var(--rose);cursor:pointer;white-space:nowrap;font-family:'DM Sans',sans-serif;transition:all 0.15s}
+.quick-btn:active{background:var(--rose);color:white;border-color:var(--rose)}
+.chat-input-row{padding:10px 16px calc(var(--safe-b) + 10px);border-top:1px solid var(--border);display:flex;gap:8px;flex-shrink:0}
+.chat-input{flex:1;border:1.5px solid var(--border);border-radius:22px;padding:10px 16px;font-size:13px;color:var(--text);background:var(--rose-pale);font-family:'DM Sans',sans-serif;outline:none;resize:none;max-height:100px;transition:border-color 0.2s;line-height:1.4}
+.chat-input:focus{border-color:var(--rose);background:white}
+.chat-send{width:40px;height:40px;background:var(--rose);border:none;border-radius:50%;cursor:pointer;flex-shrink:0;display:flex;align-items:center;justify-content:center;transition:background 0.15s}
+.chat-send:active{background:var(--rose-dark)}
+.chat-send svg{width:16px;height:16px;fill:white}
+.chat-send:disabled{background:var(--rose-mid);cursor:not-allowed}
+
+/* ── REMINDERS ── */
+.dua-card{background:linear-gradient(135deg,var(--rose),#FF6B9D);border-radius:var(--r);padding:24px 20px;text-align:center;margin-bottom:16px;position:relative;overflow:hidden}
+.dua-card::before{content:'';position:absolute;top:-20px;right:-20px;width:80px;height:80px;background:rgba(255,255,255,0.1);border-radius:50%}
+.dua-card::after{content:'';position:absolute;bottom:-15px;left:-15px;width:60px;height:60px;background:rgba(255,255,255,0.08);border-radius:50%}
+.dua-arabic{font-size:22px;color:white;font-weight:500;direction:rtl;line-height:1.6;margin-bottom:8px;font-family:'DM Sans',sans-serif}
+.dua-fr{font-size:12px;color:rgba(255,255,255,0.85);font-style:italic;margin-bottom:12px;line-height:1.5}
+.dua-dots{display:flex;justify-content:center;gap:6px}
+.dua-dot{width:6px;height:6px;border-radius:50%;background:rgba(255,255,255,0.4);cursor:pointer;transition:background 0.2s}
+.dua-dot.active{background:white}
+
+.reminder-item{display:flex;align-items:center;justify-content:space-between;padding:14px 16px;background:var(--white);border-radius:var(--r-sm);margin-bottom:8px;box-shadow:0 1px 6px rgba(232,67,122,0.07)}
+.reminder-left{display:flex;align-items:center;gap:12px}
+.reminder-icon{font-size:20px}
+.reminder-title{font-size:13px;font-weight:500;color:var(--text)}
+.reminder-sub{font-size:11px;color:var(--text-2);margin-top:2px}
+.toggle{position:relative;width:44px;height:24px;flex-shrink:0}
+.toggle input{opacity:0;width:0;height:0}
+.toggle-slider{position:absolute;inset:0;background:var(--rose-mid);border-radius:12px;cursor:pointer;transition:background 0.2s}
+.toggle-slider::before{content:'';position:absolute;width:18px;height:18px;left:3px;top:3px;background:white;border-radius:50%;transition:transform 0.2s;box-shadow:0 1px 4px rgba(0,0,0,0.2)}
+input:checked+.toggle-slider{background:var(--rose)}
+input:checked+.toggle-slider::before{transform:translateX(20px)}
+
+/* ── UTILS ── */
+.chip{display:inline-block;padding:3px 10px;border-radius:20px;font-size:11px;font-weight:500;background:var(--rose-light);color:var(--rose)}
+.empty-state{text-align:center;padding:40px 20px;color:var(--text-3)}
+.empty-state .icon{font-size:40px;margin-bottom:8px}
+.empty-state p{font-size:13px}
+.scroll-hint{height:1px;flex-shrink:0}
+.mt-4{margin-top:16px}
+.flex-between{display:flex;align-items:center;justify-content:space-between}
+</style>
+</head>
+<body>
+<div id="app">
+
+<!-- ── HEADER ── -->
+<header class="header">
+  <div class="header-left">
+    <h1>Zawaj Secret's</h1>
+    <p id="header-date">CEO Dashboard</p>
+  </div>
+  <span class="header-badge">🌹 CEO</span>
+</header>
+
+<!-- ── SCREENS ── -->
+<div class="screens">
+
+<!-- SCREEN 1 — ACCUEIL -->
+<div class="screen active" id="screen-home">
+  <div class="section-title">Vue d'ensemble <span>✦</span></div>
+
+  <div class="kpi-grid">
+    <div class="kpi-card">
+      <div class="kpi-val" data-target="487" id="kpi-klaviyo">0</div>
+      <div class="kpi-label">📧 Abonnées Klaviyo</div>
+      <div class="kpi-delta">↑ +12 ce mois</div>
+    </div>
+    <div class="kpi-card">
+      <div class="kpi-val" data-target="33" id="kpi-ig" style="font-size:24px">0K</div>
+      <div class="kpi-label">📱 Vues Instagram</div>
+      <div class="kpi-delta">↑ +8K vs mois dernier</div>
+    </div>
+    <div class="kpi-card">
+      <div class="kpi-val" data-target="12" id="kpi-flows">0</div>
+      <div class="kpi-label">⚡ Flows actifs</div>
+      <div class="kpi-delta">Welcome, Panier, Post-achat…</div>
+    </div>
+    <div class="kpi-card">
+      <div class="kpi-val" data-target="22" id="kpi-tpl">0</div>
+      <div class="kpi-label">🎨 Templates email</div>
+      <div class="kpi-delta">22 designs actifs</div>
+    </div>
+  </div>
+
+  <div class="section-title">Alertes <span>urgentes</span></div>
+
+  <div class="alert-card alert-urgent" onclick="openAlert('ladyday')">
+    <div class="alert-header">
+      <div class="alert-dot"></div>
+      <div class="alert-title">👑 Lady Day — 3 mai 2026 (DEMAIN)</div>
+    </div>
+    <div class="alert-body">Prépare le post IG, la story et l'email blast pour l'événement. Code LADYDAY20 à activer sur Shopify.</div>
+    <span class="alert-tag">URGENT • J-1</span>
+  </div>
+
+  <div class="alert-card alert-promo" onclick="openAlert('frenchdays')">
+    <div class="alert-header">
+      <div class="alert-dot"></div>
+      <div class="alert-title">🛍️ French Days — fin mai 2026</div>
+    </div>
+    <div class="alert-body">Stratégie promo + visuels Canva + flows Klaviyo à préparer. Code PERLE20 recommandé.</div>
+    <span class="alert-tag" style="background:#f97316">PRÉPARER • J-27</span>
+  </div>
+
+  <div class="alert-card alert-normal" onclick="openAlert('codes')">
+    <div class="alert-header">
+      <div class="alert-dot"></div>
+      <div class="alert-title">🏷️ Codes Shopify actifs</div>
+    </div>
+    <div class="alert-body">PERLE10 (10%), PERLE20 (20%), RITUAL15 (15%) — vérifier validité et usage.</div>
+    <span class="alert-tag" style="background:#6366f1">3 CODES ACTIFS</span>
+  </div>
+
+  <div class="alert-card alert-normal" onclick="showScreen('agents')">
+    <div class="alert-header">
+      <div class="alert-dot" style="animation:none;background:#6366f1"></div>
+      <div class="alert-title">🤖 Tunnel STORY — À créer</div>
+    </div>
+    <div class="alert-body">Nouvelle séquence story → DM → lien produit via ManyChat. Demander à l'Agente Contenu.</div>
+    <span class="alert-tag" style="background:#6366f1">IA DISPONIBLE</span>
+  </div>
+</div>
+
+<!-- SCREEN 2 — AGENDA -->
+<div class="screen" id="screen-agenda">
+  <div class="cal-header">
+    <div class="cal-title" id="cal-month-title">Mai 2026</div>
+    <div class="cal-nav">
+      <button onclick="changeMonth(-1)">‹</button>
+      <button onclick="changeMonth(1)">›</button>
+    </div>
+  </div>
+
+  <div class="card" style="padding:12px">
+    <div class="cal-grid" id="cal-grid"></div>
+  </div>
+
+  <div class="events-list card" id="events-list"></div>
+</div>
+
+<!-- SCREEN 3 — TÂCHES -->
+<div class="screen" id="screen-tasks">
+  <div class="flex-between" style="margin-bottom:12px">
+    <div class="section-title" style="margin:0">Tâches <span>du jour</span></div>
+    <span class="chip" id="task-count">0/0</span>
+  </div>
+
+  <div class="progress-wrap">
+    <div class="progress-bar-bg">
+      <div class="progress-bar-fill" id="progress-fill" style="width:0%"></div>
+    </div>
+    <div class="progress-label">
+      <span id="progress-label-left">0 complétées</span>
+      <span id="progress-label-right">0%</span>
+    </div>
+  </div>
+
+  <div id="tasks-container"></div>
+
+  <div class="add-task-row mt-4">
+    <input class="add-task-input" id="new-task-input" placeholder="Ajouter une tâche…" onkeydown="if(event.key==='Enter')addTask()">
+    <button class="add-task-btn" onclick="addTask()">+ Ajouter</button>
+  </div>
+</div>
+
+<!-- SCREEN 4 — AGENTS IA -->
+<div class="screen" id="screen-agents">
+  <div class="section-title">Agents <span>IA</span></div>
+  <div class="agent-grid">
+    <div class="agent-card" onclick="openAgent('contenu')">
+      <span class="agent-emoji">🎬</span>
+      <div class="agent-name">Agente Contenu</div>
+      <div class="agent-desc">Reels, hooks, carrousels, captions</div>
+      <span class="agent-tag">Instagram</span>
+    </div>
+    <div class="agent-card" onclick="openAgent('klaviyo')">
+      <span class="agent-emoji">📧</span>
+      <div class="agent-name">Agente Klaviyo</div>
+      <div class="agent-desc">Flows, newsletters, templates</div>
+      <span class="agent-tag">Email</span>
+    </div>
+    <div class="agent-card" onclick="openAgent('ads')">
+      <span class="agent-emoji">🎯</span>
+      <div class="agent-name">Agente Ads</div>
+      <div class="agent-desc">Meta Ads, scripts, Higgsfield</div>
+      <span class="agent-tag">Publicité</span>
+    </div>
+    <div class="agent-card" onclick="openAgent('communaute')">
+      <span class="agent-emoji">💬</span>
+      <div class="agent-name">Agente Communauté</div>
+      <div class="agent-desc">Allo Zawaj, stories, ManyChat</div>
+      <span class="agent-tag">CRM</span>
+    </div>
+    <div class="agent-card agent-card-full" onclick="openAgent('strategie')">
+      <span class="agent-emoji">👑</span>
+      <div class="agent-info">
+        <div class="agent-name">Agente Stratégie CEO</div>
+        <div class="agent-desc">Roadmap, French Days, Lady Day, priorités business</div>
+        <span class="agent-tag">Direction</span>
+      </div>
+    </div>
+  </div>
+</div>
+
+<!-- SCREEN 5 — RAPPELS -->
+<div class="screen" id="screen-reminders">
+  <div class="section-title">Doua <span>du jour</span></div>
+
+  <div class="dua-card" id="dua-card">
+    <div class="dua-arabic" id="dua-arabic"></div>
+    <div class="dua-fr" id="dua-fr"></div>
+    <div class="dua-dots" id="dua-dots"></div>
+  </div>
+
+  <div class="section-title">Rappels <span>hebdo</span></div>
+
+  <div class="reminder-item">
+    <div class="reminder-left">
+      <span class="reminder-icon">📱</span>
+      <div>
+        <div class="reminder-title">Post Instagram quotidien</div>
+        <div class="reminder-sub">Rappel à 8h30</div>
+      </div>
+    </div>
+    <label class="toggle"><input type="checkbox" checked onchange="saveReminders()" id="rem-ig"><span class="toggle-slider"></span></label>
+  </div>
+
+  <div class="reminder-item">
+    <div class="reminder-left">
+      <span class="reminder-icon">📧</span>
+      <div>
+        <div class="reminder-title">Newsletter samedi</div>
+        <div class="reminder-sub">Rappel vendredi à 18h</div>
+      </div>
+    </div>
+    <label class="toggle"><input type="checkbox" checked onchange="saveReminders()" id="rem-nl"><span class="toggle-slider"></span></label>
+  </div>
+
+  <div class="reminder-item">
+    <div class="reminder-left">
+      <span class="reminder-icon">🌙</span>
+      <div>
+        <div class="reminder-title">Fajr reminder</div>
+        <div class="reminder-sub">Rappel à 5h00</div>
+      </div>
+    </div>
+    <label class="toggle"><input type="checkbox" onchange="saveReminders()" id="rem-fajr"><span class="toggle-slider"></span></label>
+  </div>
+
+  <div class="reminder-item">
+    <div class="reminder-left">
+      <span class="reminder-icon">📊</span>
+      <div>
+        <div class="reminder-title">Revue KPIs hebdo</div>
+        <div class="reminder-sub">Lundi à 9h00</div>
+      </div>
+    </div>
+    <label class="toggle"><input type="checkbox" checked onchange="saveReminders()" id="rem-kpi"><span class="toggle-slider"></span></label>
+  </div>
+
+  <div class="reminder-item">
+    <div class="reminder-left">
+      <span class="reminder-icon">🎯</span>
+      <div>
+        <div class="reminder-title">Check French Days prep</div>
+        <div class="reminder-sub">Chaque matin jusqu'au 28 mai</div>
+      </div>
+    </div>
+    <label class="toggle"><input type="checkbox" checked onchange="saveReminders()" id="rem-fd"><span class="toggle-slider"></span></label>
+  </div>
+</div>
+
+</div><!-- end screens -->
+
+<!-- ── BOTTOM NAV ── -->
+<nav class="bottom-nav">
+  <div class="nav-item active" onclick="showScreen('home')" id="nav-home">
+    <div class="nav-icon">
+      <svg viewBox="0 0 24 24"><path d="M3 9l9-7 9 7v11a2 2 0 01-2 2H5a2 2 0 01-2-2z"/><polyline points="9 22 9 12 15 12 15 22"/></svg>
+    </div>
+    <span class="nav-label">Accueil</span>
+  </div>
+  <div class="nav-item" onclick="showScreen('agenda')" id="nav-agenda">
+    <div class="nav-icon">
+      <svg viewBox="0 0 24 24"><rect x="3" y="4" width="18" height="18" rx="2" ry="2"/><line x1="16" y1="2" x2="16" y2="6"/><line x1="8" y1="2" x2="8" y2="6"/><line x1="3" y1="10" x2="21" y2="10"/></svg>
+    </div>
+    <span class="nav-label">Agenda</span>
+  </div>
+  <div class="nav-item" onclick="showScreen('tasks')" id="nav-tasks">
+    <div class="nav-icon">
+      <svg viewBox="0 0 24 24"><line x1="8" y1="6" x2="21" y2="6"/><line x1="8" y1="12" x2="21" y2="12"/><line x1="8" y1="18" x2="21" y2="18"/><polyline points="3 6 4 7 6 5"/><polyline points="3 12 4 13 6 11"/><polyline points="3 18 4 19 6 17"/></svg>
+    </div>
+    <span class="nav-label">Tâches</span>
+  </div>
+  <div class="nav-item" onclick="showScreen('agents')" id="nav-agents">
+    <div class="nav-icon">
+      <svg viewBox="0 0 24 24"><circle cx="12" cy="12" r="3"/><path d="M12 1v4M12 19v4M4.22 4.22l2.83 2.83M16.95 16.95l2.83 2.83M1 12h4M19 12h4M4.22 19.78l2.83-2.83M16.95 7.05l2.83-2.83"/></svg>
+    </div>
+    <span class="nav-label">Agents</span>
+  </div>
+  <div class="nav-item" onclick="showScreen('reminders')" id="nav-reminders">
+    <div class="nav-icon">
+      <svg viewBox="0 0 24 24"><path d="M18 8A6 6 0 006 8c0 7-3 9-3 9h18s-3-2-3-9"/><path d="M13.73 21a2 2 0 01-3.46 0"/></svg>
+    </div>
+    <span class="nav-label">Rappels</span>
+  </div>
+</nav>
+
+</div><!-- end app -->
+
+<!-- ── AGENT MODALS ── -->
+<div id="modal-contenu" class="modal-overlay" onclick="closeModalOutside(event,'contenu')">
+  <div class="modal-sheet">
+    <div class="modal-drag"></div>
+    <div class="modal-header">
+      <div class="modal-agent-info">
+        <div class="modal-emoji">🎬</div>
+        <div><div class="modal-agent-name">Agente Contenu</div><div class="modal-agent-role">Reels · Carrousels · Captions</div></div>
+      </div>
+      <button class="modal-close" onclick="closeAgent('contenu')">✕</button>
+    </div>
+    <div class="chat-messages" id="chat-messages-contenu"></div>
+    <div class="quick-prompts" id="quick-contenu"></div>
+    <div class="chat-input-row">
+      <textarea class="chat-input" id="input-contenu" placeholder="Demande à ton agente…" rows="1" onkeydown="handleInputKey(event,'contenu')" oninput="autoResize(this)"></textarea>
+      <button class="chat-send" id="send-contenu" onclick="sendMessage('contenu')"><svg viewBox="0 0 24 24"><path d="M22 2L11 13"/><path d="M22 2L15 22 11 13 2 9l20-7z"/></svg></button>
+    </div>
+  </div>
+</div>
+
+<div id="modal-klaviyo" class="modal-overlay" onclick="closeModalOutside(event,'klaviyo')">
+  <div class="modal-sheet">
+    <div class="modal-drag"></div>
+    <div class="modal-header">
+      <div class="modal-agent-info">
+        <div class="modal-emoji">📧</div>
+        <div><div class="modal-agent-name">Agente Klaviyo</div><div class="modal-agent-role">Flows · Newsletters · Templates</div></div>
+      </div>
+      <button class="modal-close" onclick="closeAgent('klaviyo')">✕</button>
+    </div>
+    <div class="chat-messages" id="chat-messages-klaviyo"></div>
+    <div class="quick-prompts" id="quick-klaviyo"></div>
+    <div class="chat-input-row">
+      <textarea class="chat-input" id="input-klaviyo" placeholder="Demande à ton agente…" rows="1" onkeydown="handleInputKey(event,'klaviyo')" oninput="autoResize(this)"></textarea>
+      <button class="chat-send" id="send-klaviyo" onclick="sendMessage('klaviyo')"><svg viewBox="0 0 24 24"><path d="M22 2L11 13"/><path d="M22 2L15 22 11 13 2 9l20-7z"/></svg></button>
+    </div>
+  </div>
+</div>
+
+<div id="modal-ads" class="modal-overlay" onclick="closeModalOutside(event,'ads')">
+  <div class="modal-sheet">
+    <div class="modal-drag"></div>
+    <div class="modal-header">
+      <div class="modal-agent-info">
+        <div class="modal-emoji">🎯</div>
+        <div><div class="modal-agent-name">Agente Ads</div><div class="modal-agent-role">Meta Ads · Scripts · Media Buying</div></div>
+      </div>
+      <button class="modal-close" onclick="closeAgent('ads')">✕</button>
+    </div>
+    <div class="chat-messages" id="chat-messages-ads"></div>
+    <div class="quick-prompts" id="quick-ads"></div>
+    <div class="chat-input-row">
+      <textarea class="chat-input" id="input-ads" placeholder="Demande à ton agente…" rows="1" onkeydown="handleInputKey(event,'ads')" oninput="autoResize(this)"></textarea>
+      <button class="chat-send" id="send-ads" onclick="sendMessage('ads')"><svg viewBox="0 0 24 24"><path d="M22 2L11 13"/><path d="M22 2L15 22 11 13 2 9l20-7z"/></svg></button>
+    </div>
+  </div>
+</div>
+
+<div id="modal-communaute" class="modal-overlay" onclick="closeModalOutside(event,'communaute')">
+  <div class="modal-sheet">
+    <div class="modal-drag"></div>
+    <div class="modal-header">
+      <div class="modal-agent-info">
+        <div class="modal-emoji">💬</div>
+        <div><div class="modal-agent-name">Agente Communauté</div><div class="modal-agent-role">Allo Zawaj · Stories · ManyChat</div></div>
+      </div>
+      <button class="modal-close" onclick="closeAgent('communaute')">✕</button>
+    </div>
+    <div class="chat-messages" id="chat-messages-communaute"></div>
+    <div class="quick-prompts" id="quick-communaute"></div>
+    <div class="chat-input-row">
+      <textarea class="chat-input" id="input-communaute" placeholder="Demande à ton agente…" rows="1" onkeydown="handleInputKey(event,'communaute')" oninput="autoResize(this)"></textarea>
+      <button class="chat-send" id="send-communaute" onclick="sendMessage('communaute')"><svg viewBox="0 0 24 24"><path d="M22 2L11 13"/><path d="M22 2L15 22 11 13 2 9l20-7z"/></svg></button>
+    </div>
+  </div>
+</div>
+
+<div id="modal-strategie" class="modal-overlay" onclick="closeModalOutside(event,'strategie')">
+  <div class="modal-sheet">
+    <div class="modal-drag"></div>
+    <div class="modal-header">
+      <div class="modal-agent-info">
+        <div class="modal-emoji">👑</div>
+        <div><div class="modal-agent-name">Agente Stratégie CEO</div><div class="modal-agent-role">Roadmap · Priorités · Growth</div></div>
+      </div>
+      <button class="modal-close" onclick="closeAgent('strategie')">✕</button>
+    </div>
+    <div class="chat-messages" id="chat-messages-strategie"></div>
+    <div class="quick-prompts" id="quick-strategie"></div>
+    <div class="chat-input-row">
+      <textarea class="chat-input" id="input-strategie" placeholder="Demande à ton agente…" rows="1" onkeydown="handleInputKey(event,'strategie')" oninput="autoResize(this)"></textarea>
+      <button class="chat-send" id="send-strategie" onclick="sendMessage('strategie')"><svg viewBox="0 0 24 24"><path d="M22 2L11 13"/><path d="M22 2L15 22 11 13 2 9l20-7z"/></svg></button>
+    </div>
+  </div>
+</div>
+
+<!-- ── ALERT MODAL ── -->
+<div id="modal-alert" class="modal-overlay" onclick="closeAlert()">
+  <div class="modal-sheet">
+    <div class="modal-drag"></div>
+    <div class="modal-header">
+      <div class="modal-agent-info">
+        <div class="modal-emoji" id="alert-emoji">🚨</div>
+        <div><div class="modal-agent-name" id="alert-title">Alerte</div><div class="modal-agent-role" id="alert-sub"></div></div>
+      </div>
+      <button class="modal-close" onclick="closeAlert()">✕</button>
+    </div>
+    <div style="padding:20px;overflow-y:auto" id="alert-body-content"></div>
+  </div>
+</div>
+
+<!-- ── API KEY SETUP MODAL ── -->
+<div id="modal-apikey" class="modal-overlay" style="background:rgba(0,0,0,0.7);pointer-events:auto;display:none;align-items:flex-end">
+  <div class="modal-sheet" style="transform:translateY(0)">
+    <div class="modal-drag"></div>
+    <div style="padding:24px 20px">
+      <div style="text-align:center;margin-bottom:20px">
+        <div style="font-size:36px;margin-bottom:8px">🔑</div>
+        <div style="font-family:'Cormorant Garamond',serif;font-size:22px;font-weight:600;color:var(--text)">Clé API Anthropic</div>
+        <div style="font-size:12px;color:var(--text-2);margin-top:6px">Stockée localement sur ton appareil, jamais envoyée ailleurs.</div>
+      </div>
+      <input id="apikey-input" type="password" placeholder="sk-ant-api03-..." style="width:100%;border:1.5px solid var(--border);border-radius:var(--r-sm);padding:12px 14px;font-size:13px;color:var(--text);background:var(--rose-pale);font-family:'DM Sans',sans-serif;outline:none;margin-bottom:12px" oninput="this.style.borderColor='var(--rose)'">
+      <button onclick="saveApiKey()" style="width:100%;background:var(--rose);color:white;border:none;border-radius:var(--r-sm);padding:14px;font-size:14px;font-weight:600;font-family:'DM Sans',sans-serif;cursor:pointer;margin-bottom:10px">Enregistrer et commencer →</button>
+      <div style="font-size:11px;color:var(--text-3);text-align:center">Obtiens ta clé sur <strong>console.anthropic.com</strong></div>
+    </div>
+  </div>
+</div>
+
+<script>
+// ─────────────────────────────────────────
+// CONFIG
+// ─────────────────────────────────────────
+let API_KEY = localStorage.getItem('zawaj_api_key') || '';
+const MODEL = 'claude-sonnet-4-20250514';
+
+const BASE_CONTEXT = `Tu es une assistante IA experte de la marque Zawaj Secret's. Réponds toujours en français, de façon claire, actionnable et adaptée au mobile. Sois directe, efficace, et parle comme une grande sœur bienveillante.
+
+MARQUE : Zawaj Secret's — bien-être intime féminin fondée par Ourouata.
+MISSION : Briser les tabous autour de l'intimité féminine avec bienveillance, sans jugement, jamais vulgaire.
+CIBLE : "Les Perles" — femmes musulmanes/mariées françaises et franco-maghrébines, 22–45 ans.
+TON : Grande sœur bienveillante, sororité, franc, percutant, chargé émotionnellement. Jamais neutre.
+
+PRODUITS :
+• Brume Intime 3en1 : 24,90€ (bestseller, abonnement 22,90€)
+• Gummies Probiotiques : 27,90€
+• Douchette Intime Nomade : 21,90€
+• Gel Parfumé Musc Intime : 22,90€
+• Parfum Attirance Afrodita : 22,90€
+• Douceur Khamaré : 19,90€
+• Mousse Nettoyante Intime : 19,90€
+• Tablette Love Chocolat : 17,90€
+
+CHIFFRES CLÉS : 1 696 abonnées Instagram, 487 abonnées Klaviyo, 12 flows actifs, 22 templates email.
+CODES PROMO : PERLE10 (10%), PERLE20 (20%), RITUAL15 (15%), LADYDAY20 (20% Lady Day)
+ÉQUIPE : Lisa (CM, vouvoiement), Nok (UGC, tutoiement), communauté "Les Perles".
+
+ÉVÉNEMENTS URGENTS :
+• Lady Day : 3 mai 2026 — J-1, push maximum
+• French Days : fin mai 2026 — préparer maintenant
+
+PLATEFORMES :
+• Instagram : 100% Reels, stories interactives, carrousels. @zawajsecrets
+• Klaviyo : welcome flow, abandon panier, post-achat, newsletter samedi
+• ManyChat : trigger "CYCLE" → flow DM automatique
+• Canva : palette #D4507A, #F2C4CE, #FFF5F5`;
+
+// ─────────────────────────────────────────
+// AGENTS CONFIG
+// ─────────────────────────────────────────
+const AGENTS = {
+  contenu: {
+    name: 'Agente Contenu',
+    emoji: '🎬',
+    systemPrompt: BASE_CONTEXT + `
+
+TON RÔLE : Experte en création de contenu Instagram pour Zawaj Secret's.
+Tu crées des Reels, carrousels, captions, hooks et scripts vidéo ultra-performants.
+Tu connais les codes de l'algorithme Instagram en 2026, les tendances audio, les formats qui convertissent.
+Tu écris exactement comme Ourouata — indiscernable.
+
+FORMATS MAÎTRISÉS :
+• Reels 0–3s hook : choc émotionnel ou question tabou
+• Carrousels : slide 1 = hook, slides 2–5 = valeur, slide finale = CTA
+• Stories : quiz, sondage, "répondre si tu te reconnais"
+• Captions : court, 3 paragraphes max, hashtags en commentaire
+• UGC Nok : script peer-to-peer pour vidéos testimonials`,
+    quickPrompts: [
+      '🎬 Hook Reel Brume Intime 3s',
+      '📱 Script carrousel Khamaré',
+      '✍️ Caption Lady Day 3 mai',
+      '💡 Idée story interactive semaine'
+    ]
+  },
+  klaviyo: {
+    name: 'Agente Klaviyo',
+    emoji: '📧',
+    systemPrompt: BASE_CONTEXT + `
+
+TON RÔLE : Experte Klaviyo et email marketing pour Zawaj Secret's.
+Tu optimises les 12 flows actifs, crées des newsletters performantes et des templates qui convertissent.
+
+FLOWS ACTIFS : Welcome (5 emails), Abandon panier (3 emails), Post-achat Brume (4 emails), Post-achat Gummies, Win-back, Birthday, Browse abandonment, SMS flows.
+NEWSLETTER : Chaque samedi, thème épanouissement féminin + actualité marque + produit mis en avant.
+MÉTRIQUES CIBLES : Open rate >35%, Click rate >4%, Conversion >2%
+
+BONNES PRATIQUES :
+• Sujet : 35–45 caractères, emoji au début, urgence ou curiosité
+• Préheader : complémentaire, jamais répétitif
+• Structure email : hero image, paragraphe émotionnel, CTA unique
+• Segmentation : actives (achat -90j), engagées (clic -30j), dormantes (+90j)`,
+    quickPrompts: [
+      '📧 Sujet newsletter samedi',
+      '⚡ Email abandon panier J+3',
+      '🛒 Séquence post-achat Brume',
+      '🛍️ Template promo French Days'
+    ]
+  },
+  ads: {
+    name: 'Agente Ads',
+    emoji: '🎯',
+    systemPrompt: BASE_CONTEXT + `
+
+TON RÔLE : Experte Meta Ads et création de scripts publicitaires pour Zawaj Secret's.
+Tu crées des scripts UGC, des accroches publicitaires, des prompts Higgsfield et des stratégies media buying.
+
+FORMATS ADS :
+• Vidéo UGC 30s : hook 3s + problème 8s + solution 12s + CTA 7s
+• Image statique : visuel produit + headline court + code promo
+• Carrousel ads : avant/après, liste bénéfices, collection produits
+
+BUDGETS INDICATIFS :
+• Test créatifs : 5–10€/jour par variante, 3–5 jours minimum
+• Scale : ROAS >3 → augmenter budget 20%/48h
+• Audiences : LAL 1% acheteurs, intérêts bien-être féminin/islam/mariage
+
+HIGGSFIELD / AI VIDEO :
+Tu rédiges des prompts précis pour générer des vidéos product avec IA (ambiance, éclairage, mouvement)`,
+    quickPrompts: [
+      '🎬 Script UGC 30s Brume Intime',
+      '🤖 Prompt Higgsfield Khamaré',
+      '💸 Copy ads French Days PERLE20',
+      '📊 Stratégie budget 500€/mois'
+    ]
+  },
+  communaute: {
+    name: 'Agente Communauté',
+    emoji: '💬',
+    systemPrompt: BASE_CONTEXT + `
+
+TON RÔLE : Experte en community management et engagement pour Zawaj Secret's.
+Tu gères les interactions avec Les Perles, optimises ManyChat et crées des mécaniques d'engagement.
+
+ALLO ZAWAJ : Rubrique Q&R sur l'intimité féminine. Réponses bienveillantes, sans tabou, avec références produits si pertinent.
+MANYCHAT : Trigger actuel → mot "CYCLE" en DM → séquence automatique 5 messages + lien produit.
+RÉPONSE TYPE : chaleureuse, sisterhood, validante émotionnellement, jamais dans le jugement.
+
+GESTION COMMENTAIRES :
+• Commentaire négatif : répondre avec empathie, never defensive, offer to DM
+• DM sensible : redirect vers consultation pro si médical
+• Troll : ignorer ou répondre avec humour bienveillant
+
+ENGAGEMENT STORIES :
+• Quiz : "Laquelle te ressemble ?", "Tu as déjà vécu ça ?"
+• Sondage : 2 options max, binaire, émotionnel
+• Question box : Allo Zawaj hebdomadaire`,
+    quickPrompts: [
+      '🤍 Réponse DM "est-ce halal ?"',
+      '⚡ Flow ManyChat trigger CYCLE',
+      '📊 Questions stories cette semaine',
+      '💬 Réponse commentaire négatif'
+    ]
+  },
+  strategie: {
+    name: 'Agente Stratégie CEO',
+    emoji: '👑',
+    systemPrompt: BASE_CONTEXT + `
+
+TON RÔLE : Conseillère stratégique CEO pour Ourouata et Zawaj Secret's.
+Tu analyses les KPIs, crées des roadmaps et priorises les actions à fort impact.
+
+PRIORITÉS Q2 2026 :
+1. Lady Day 3 mai — push maximal sur tous canaux
+2. French Days fin mai — préparer campagne intégrée IG + Klaviyo + Ads
+3. Scale newsletter à 700 abonnées avant juillet
+4. Lancer nouveau flow post-achat Khamaré
+5. Tester format carrousel ads sur Meta
+
+FRAMEWORK DE DÉCISION : Impact × Facilité × Urgence
+MÉTRIQUES À SURVEILLER : CAC <15€, LTV >45€, churn <8%/mois, ROAS >3
+
+STYLE CONSEIL :
+• Direct, sans langue de bois
+• Priorisation claire (1, 2, 3...)
+• Actions concrètes avec délais
+• Alertes sur risques et opportunités manquées`,
+    quickPrompts: [
+      '🗺️ Plan action French Days complet',
+      '📅 Priorités semaine 1er mai',
+      '🚀 Roadmap Q2–Q3 2026',
+      '📈 Analyse KPIs et actions'
+    ]
+  }
+};
+
+// ─────────────────────────────────────────
+// STATE
+// ─────────────────────────────────────────
+let currentScreen = 'home';
+let chatHistories = { contenu: [], klaviyo: [], ads: [], communaute: [], strategie: [] };
+let calYear = 2026, calMonth = 4; // 0-indexed, May = 4
+
+const CAL_EVENTS = {
+  '2026-05-01': [{ title: 'Fête du Travail 🌹', badge: 'badge-green', desc: 'Jour férié' }],
+  '2026-05-03': [{ title: '👑 Lady Day — URGENCE', badge: 'badge-rose', desc: 'Push IG + email blast + story + code LADYDAY20' }],
+  '2026-05-08': [{ title: 'Victoire 1945 🕊️', badge: 'badge-purple', desc: 'Jour férié' }],
+  '2026-05-09': [{ title: '📧 Newsletter hebdo', badge: 'badge-rose', desc: 'Envoi samedi — sujet épanouissement féminin' }],
+  '2026-05-16': [{ title: '📧 Newsletter hebdo', badge: 'badge-rose', desc: 'Envoi samedi — focus Khamaré' }],
+  '2026-05-21': [{ title: 'Ascension ✝️', badge: 'badge-purple', desc: 'Jour férié' }],
+  '2026-05-23': [{ title: '📧 Newsletter hebdo', badge: 'badge-rose', desc: 'Envoi samedi — teaser French Days' }],
+  '2026-05-25': [{ title: '🛍️ French Days — Début', badge: 'badge-orange', desc: 'Lancer campagne ads + stories countdown' }],
+  '2026-05-29': [{ title: '🛍️ French Days PEAK', badge: 'badge-orange', desc: 'Email blast + push social — code PERLE20' }],
+  '2026-05-30': [{ title: '📧 Newsletter French Days', badge: 'badge-orange', desc: 'Dernier email promo avant clôture' }]
+};
+
+const DUAS = [
+  { ar: 'بِسْمِ اللَّهِ الرَّحْمَنِ الرَّحِيمِ', fr: 'Au nom d\'Allah, le Tout Miséricordieux, le Très Miséricordieux.' },
+  { ar: 'رَبِّ زِدْنِي عِلْمًا', fr: 'Mon Seigneur, accroîs ma science.' },
+  { ar: 'حَسْبُنَا اللَّهُ وَنِعْمَ الْوَكِيلُ', fr: 'Allah nous suffit, Il est le meilleur garant.' },
+  { ar: 'اللَّهُمَّ أَعِنِّي عَلَى ذِكْرِكَ وَشُكْرِكَ وَحُسْنِ عِبَادَتِكَ', fr: 'Ô Allah, aide-moi à Te rappeler, à T\'être reconnaissant et à bien T\'adorer.' },
+  { ar: 'رَبَّنَا آتِنَا فِي الدُّنْيَا حَسَنَةً وَفِي الْآخِرَةِ حَسَنَةً', fr: 'Seigneur, accorde-nous le meilleur en ce monde et le meilleur dans l\'Au-delà.' }
+];
+
+let currentDua = 0;
+
+// ─────────────────────────────────────────
+// NAVIGATION
+// ─────────────────────────────────────────
+function showScreen(id) {
+  document.querySelectorAll('.screen').forEach(s => s.classList.remove('active'));
+  document.querySelectorAll('.nav-item').forEach(n => n.classList.remove('active'));
+  document.getElementById('screen-' + id).classList.add('active');
+  document.getElementById('nav-' + id).classList.add('active');
+  currentScreen = id;
+  updateHeader(id);
+}
+
+const HEADER_TITLES = {
+  home: { title: "Zawaj Secret's", sub: 'CEO Dashboard • 1er mai 2026' },
+  agenda: { title: 'Agenda', sub: 'Mai 2026 — Lady Day & French Days' },
+  tasks: { title: 'Tâches', sub: 'Priorités du jour' },
+  agents: { title: 'Agents IA', sub: '5 expertes à ton service' },
+  reminders: { title: 'Rappels', sub: 'Doua + notifications'  }
+};
+
+function updateHeader(id) {
+  const h = HEADER_TITLES[id] || HEADER_TITLES.home;
+  document.querySelector('.header-left h1').textContent = id === 'home' ? "Zawaj Secret's" : h.title;
+  document.querySelector('.header-left p').textContent = h.sub;
+}
+
+// ─────────────────────────────────────────
+// KPI COUNTER ANIMATION
+// ─────────────────────────────────────────
+function animateCounter(el, target, suffix = '') {
+  let start = 0;
+  const duration = 1200;
+  const step = target / (duration / 16);
+  const timer = setInterval(() => {
+    start = Math.min(start + step, target);
+    el.textContent = Math.floor(start) + suffix;
+    if (start >= target) clearInterval(timer);
+  }, 16);
+}
+
+// ─────────────────────────────────────────
+// CALENDAR
+// ─────────────────────────────────────────
+function changeMonth(delta) {
+  calMonth += delta;
+  if (calMonth > 11) { calMonth = 0; calYear++; }
+  if (calMonth < 0)  { calMonth = 11; calYear--; }
+  renderCalendar();
+}
+
+function renderCalendar() {
+  const months = ['Janvier','Février','Mars','Avril','Mai','Juin','Juillet','Août','Septembre','Octobre','Novembre','Décembre'];
+  document.getElementById('cal-month-title').textContent = months[calMonth] + ' ' + calYear;
+
+  const grid = document.getElementById('cal-grid');
+  grid.innerHTML = '';
+
+  const days = ['L','M','M','J','V','S','D'];
+  days.forEach(d => {
+    const el = document.createElement('div');
+    el.className = 'cal-day-header';
+    el.textContent = d;
+    grid.appendChild(el);
+  });
+
+  const firstDay = new Date(calYear, calMonth, 1).getDay();
+  const startOffset = firstDay === 0 ? 6 : firstDay - 1;
+  const daysInMonth = new Date(calYear, calMonth + 1, 0).getDate();
+  const prevDays = new Date(calYear, calMonth, 0).getDate();
+
+  const today = new Date();
+
+  for (let i = startOffset - 1; i >= 0; i--) {
+    const el = createDayEl(prevDays - i, true, false, null);
+    grid.appendChild(el);
+  }
+
+  for (let d = 1; d <= daysInMonth; d++) {
+    const dateStr = `${calYear}-${String(calMonth+1).padStart(2,'0')}-${String(d).padStart(2,'0')}`;
+    const isToday = today.getFullYear()===calYear && today.getMonth()===calMonth && today.getDate()===d;
+    const events = CAL_EVENTS[dateStr];
+    const hasEvent = !!events;
+    const isFrenchDay = dateStr >= '2026-05-25' && dateStr <= '2026-05-31';
+    const el = createDayEl(d, false, isToday, hasEvent ? (isFrenchDay ? 'french' : 'special') : null);
+    el.onclick = () => showDayEvents(d, dateStr);
+    grid.appendChild(el);
+  }
+
+  let extra = grid.children.length - 7;
+  while (extra % 7 !== 0) {
+    const n = extra + 1 - (startOffset + daysInMonth);
+    grid.appendChild(createDayEl(n, true, false, null));
+    extra++;
+  }
+
+  renderEventsList();
+}
+
+function createDayEl(num, isOther, isToday, eventType) {
+  const el = document.createElement('div');
+  el.className = 'cal-day';
+  if (isOther) el.classList.add('other-month');
+  if (isToday) el.classList.add('today');
+  if (eventType === 'special') el.classList.add('event-special');
+  if (eventType === 'french') el.classList.add('event-french');
+  const numEl = document.createElement('span');
+  numEl.className = 'cal-num';
+  numEl.textContent = num;
+  el.appendChild(numEl);
+  if (eventType) {
+    const dot = document.createElement('div');
+    dot.className = 'cal-dot';
+    el.classList.add('has-event');
+    el.appendChild(dot);
+  }
+  return el;
+}
+
+function renderEventsList() {
+  const list = document.getElementById('events-list');
+  const monthStr = `${calYear}-${String(calMonth+1).padStart(2,'0')}`;
+  const monthEvents = Object.entries(CAL_EVENTS)
+    .filter(([k]) => k.startsWith(monthStr))
+    .sort(([a],[b]) => a.localeCompare(b));
+
+  if (!monthEvents.length) {
+    list.innerHTML = '<div class="empty-state"><div class="icon">📅</div><p>Aucun événement ce mois</p></div>';
+    return;
+  }
+
+  list.innerHTML = '<div style="font-size:11px;font-weight:600;color:var(--text-3);text-transform:uppercase;letter-spacing:.08em;margin-bottom:8px">Événements du mois</div>';
+  monthEvents.forEach(([dateStr, events]) => {
+    const d = parseInt(dateStr.split('-')[2]);
+    const mo = ['Jan','Fév','Mar','Avr','Mai','Juin','Juil','Aoû','Sep','Oct','Nov','Déc'][calMonth];
+    events.forEach(ev => {
+      list.innerHTML += `
+        <div class="event-item">
+          <div class="event-date"><div class="d">${d}</div><div class="m">${mo}</div></div>
+          <div class="event-info">
+            <div class="ev-title">${ev.title}</div>
+            <div class="ev-desc">${ev.desc}</div>
+            <span class="event-badge ${ev.badge}" style="background:${ev.badge==='badge-rose'?'var(--rose)':ev.badge==='badge-orange'?'#f97316':ev.badge==='badge-purple'?'#6366f1':'#22c55e'}">${ev.badge.replace('badge-','').toUpperCase()}</span>
+          </div>
+        </div>`;
+    });
+  });
+}
+
+function showDayEvents(d, dateStr) {
+  const events = CAL_EVENTS[dateStr];
+  if (!events) return;
+  const mo = ['Jan','Fév','Mar','Avr','Mai','Juin','Juil','Aoû','Sep','Oct','Nov','Déc'][calMonth];
+  document.getElementById('alert-emoji').textContent = events[0].title.split(' ')[0];
+  document.getElementById('alert-title').textContent = `${d} ${mo} ${calYear}`;
+  document.getElementById('alert-sub').textContent = events.length + ' événement(s)';
+  document.getElementById('alert-body-content').innerHTML = events.map(ev =>
+    `<div style="margin-bottom:16px"><div style="font-size:16px;font-weight:600;color:var(--text);margin-bottom:4px">${ev.title}</div><div style="font-size:13px;color:var(--text-2);line-height:1.5">${ev.desc}</div></div>`
+  ).join('');
+  document.getElementById('modal-alert').classList.add('open');
+}
+
+// ─────────────────────────────────────────
+// TASKS
+// ─────────────────────────────────────────
+const DEFAULT_TASKS = [
+  { id: 1, text: 'Créer post IG Lady Day 3 mai', priority: 'high', done: false, group: "Aujourd'hui — URGENT" },
+  { id: 2, text: 'Activer code LADYDAY20 sur Shopify', priority: 'high', done: false, group: "Aujourd'hui — URGENT" },
+  { id: 3, text: 'Email blast Lady Day — envoyer à 487 abonnées', priority: 'high', done: false, group: "Aujourd'hui — URGENT" },
+  { id: 4, text: 'Story interactive Lady Day (sondage + lien)', priority: 'med', done: false, group: 'Cette semaine' },
+  { id: 5, text: 'Brief Lisa pour post French Days', priority: 'med', done: false, group: 'Cette semaine' },
+  { id: 6, text: 'Créer visuels Canva French Days (rose/blanc)', priority: 'med', done: false, group: 'Cette semaine' },
+  { id: 7, text: 'Préparer flow Klaviyo abandon panier French Days', priority: 'low', done: false, group: 'Ce mois' },
+  { id: 8, text: 'Briefer Nok pour UGC Khamaré', priority: 'low', done: false, group: 'Ce mois' }
+];
+
+let tasks = JSON.parse(localStorage.getItem('zawaj_tasks') || 'null') || DEFAULT_TASKS;
+
+function saveTasks() { localStorage.setItem('zawaj_tasks', JSON.stringify(tasks)); }
+
+function renderTasks() {
+  const container = document.getElementById('tasks-container');
+  const groups = {};
+  tasks.forEach(t => {
+    if (!groups[t.group]) groups[t.group] = [];
+    groups[t.group].push(t);
+  });
+
+  container.innerHTML = '';
+  Object.entries(groups).forEach(([g, ts]) => {
+    let html = `<div class="task-group"><div class="task-group-title">${g}</div>`;
+    ts.forEach(t => {
+      const pLabels = { high: '🔴 Urgent', med: '🟡 Moyen', low: '🟢 Normal' };
+      const pClass = { high: 'prio-high', med: 'prio-med', low: 'prio-low' };
+      html += `
+        <div class="task-item ${t.done ? 'done' : ''}" onclick="toggleTask(${t.id})">
+          <div class="task-check ${t.done ? 'checked' : ''}">
+            <svg viewBox="0 0 12 9"><polyline points="1 4 4.5 7.5 11 1"/></svg>
+          </div>
+          <span class="task-text">${t.text}</span>
+          <span class="task-priority ${pClass[t.priority]}">${pLabels[t.priority]}</span>
+        </div>`;
+    });
+    html += '</div>';
+    container.innerHTML += html;
+  });
+
+  const total = tasks.length;
+  const done = tasks.filter(t => t.done).length;
+  const pct = total ? Math.round(done / total * 100) : 0;
+  document.getElementById('progress-fill').style.width = pct + '%';
+  document.getElementById('progress-label-left').textContent = done + ' complétée' + (done > 1 ? 's' : '');
+  document.getElementById('progress-label-right').textContent = pct + '%';
+  document.getElementById('task-count').textContent = done + '/' + total;
+}
+
+function toggleTask(id) {
+  const t = tasks.find(t => t.id === id);
+  if (t) { t.done = !t.done; saveTasks(); renderTasks(); }
+}
+
+function addTask() {
+  const input = document.getElementById('new-task-input');
+  const text = input.value.trim();
+  if (!text) return;
+  tasks.push({ id: Date.now(), text, priority: 'med', done: false, group: "Aujourd'hui — URGENT" });
+  saveTasks();
+  renderTasks();
+  input.value = '';
+}
+
+// ─────────────────────────────────────────
+// AGENTS / CHAT
+// ─────────────────────────────────────────
+function openAgent(id) {
+  if (!API_KEY) { showApiKeyModal(); return; }
+  const modal = document.getElementById('modal-' + id);
+  modal.classList.add('open');
+  document.body.style.overflow = 'hidden';
+  renderQuickPrompts(id);
+  if (chatHistories[id].length === 0) renderWelcome(id);
+  setTimeout(() => document.getElementById('input-' + id).focus(), 400);
+}
+
+function closeAgent(id) {
+  document.getElementById('modal-' + id).classList.remove('open');
+  document.body.style.overflow = '';
+}
+
+function closeModalOutside(e, id) {
+  if (e.target === document.getElementById('modal-' + id)) closeAgent(id);
+}
+
+function renderWelcome(id) {
+  const agent = AGENTS[id];
+  const msgs = document.getElementById('chat-messages-' + id);
+  msgs.innerHTML = `<div class="msg msg-assistant">Salam ! Je suis ton ${agent.name} ${agent.emoji}<br><br>Je connais toute la marque Zawaj Secret's — les produits, Les Perles, les flows Klaviyo, les campagnes…<br><br>Comment je peux t'aider aujourd'hui ?</div>`;
+}
+
+function renderQuickPrompts(id) {
+  const container = document.getElementById('quick-' + id);
+  container.innerHTML = AGENTS[id].quickPrompts.map(q =>
+    `<button class="quick-btn" onclick="useQuickPrompt('${id}', this.textContent)">${q}</button>`
+  ).join('');
+}
+
+function useQuickPrompt(id, text) {
+  const input = document.getElementById('input-' + id);
+  input.value = text;
+  sendMessage(id);
+}
+
+async function sendMessage(id) {
+  if (!API_KEY) { showApiKeyModal(); return; }
+  const input = document.getElementById('input-' + id);
+  const text = input.value.trim();
+  if (!text) return;
+
+  const sendBtn = document.getElementById('send-' + id);
+  sendBtn.disabled = true;
+  input.value = '';
+  input.style.height = '';
+
+  const msgs = document.getElementById('chat-messages-' + id);
+
+  // Add user message
+  const userEl = document.createElement('div');
+  userEl.className = 'msg msg-user';
+  userEl.textContent = text;
+  msgs.appendChild(userEl);
+  msgs.scrollTop = msgs.scrollHeight;
+
+  // Add typing indicator
+  const typingEl = document.createElement('div');
+  typingEl.className = 'msg msg-assistant msg-typing';
+  typingEl.innerHTML = '<span class="typing-dot"></span><span class="typing-dot"></span><span class="typing-dot"></span>';
+  msgs.appendChild(typingEl);
+  msgs.scrollTop = msgs.scrollHeight;
+
+  chatHistories[id].push({ role: 'user', content: text });
+
+  try {
+    const res = await fetch('https://api.anthropic.com/v1/messages', {
+      method: 'POST',
+      headers: {
+        'Content-Type': 'application/json',
+        'x-api-key': API_KEY,
+        'anthropic-version': '2023-06-01',
+        'anthropic-dangerous-direct-browser-use': 'true'
+      },
+      body: JSON.stringify({
+        model: MODEL,
+        max_tokens: 2048,
+        stream: true,
+        system: AGENTS[id].systemPrompt,
+        messages: chatHistories[id].map(m => ({ role: m.role, content: m.content }))
+      })
+    });
+
+    typingEl.remove();
+
+    const assistantEl = document.createElement('div');
+    assistantEl.className = 'msg msg-assistant';
+    msgs.appendChild(assistantEl);
+
+    let fullText = '';
+    const reader = res.body.getReader();
+    const decoder = new TextDecoder();
+
+    while (true) {
+      const { done, value } = await reader.read();
+      if (done) break;
+      const lines = decoder.decode(value).split('\n');
+      for (const line of lines) {
+        if (!line.startsWith('data: ')) continue;
+        const data = line.slice(6).trim();
+        if (data === '[DONE]' || !data) continue;
+        try {
+          const parsed = JSON.parse(data);
+          if (parsed.type === 'content_block_delta' && parsed.delta?.type === 'text_delta') {
+            fullText += parsed.delta.text;
+            assistantEl.innerHTML = formatMessage(fullText) + '<span style="opacity:0.5;animation:typing 1s infinite;display:inline-block">▍</span>';
+            msgs.scrollTop = msgs.scrollHeight;
+          }
+          if (parsed.type === 'message_stop') {
+            assistantEl.innerHTML = formatMessage(fullText);
+          }
+        } catch {}
+      }
+    }
+
+    assistantEl.innerHTML = formatMessage(fullText);
+    chatHistories[id].push({ role: 'assistant', content: fullText });
+
+  } catch (err) {
+    typingEl.remove();
+    const errEl = document.createElement('div');
+    errEl.className = 'msg msg-assistant';
+    errEl.style.color = 'var(--rose)';
+    errEl.textContent = '❌ Erreur de connexion. Vérifie ta clé API et réessaie.';
+    msgs.appendChild(errEl);
+  }
+
+  sendBtn.disabled = false;
+  msgs.scrollTop = msgs.scrollHeight;
+}
+
+function formatMessage(text) {
+  return text
+    .replace(/&/g,'&amp;').replace(/</g,'&lt;').replace(/>/g,'&gt;')
+    .replace(/\*\*(.+?)\*\*/g, '<strong>$1</strong>')
+    .replace(/\*(.+?)\*/g, '<em>$1</em>')
+    .replace(/^• (.+)$/gm, '<div style="padding-left:8px">• $1</div>')
+    .replace(/\n\n/g, '<br><br>')
+    .replace(/\n/g, '<br>');
+}
+
+function handleInputKey(e, id) {
+  if (e.key === 'Enter' && !e.shiftKey) {
+    e.preventDefault();
+    sendMessage(id);
+  }
+}
+
+function autoResize(el) {
+  el.style.height = '';
+  el.style.height = Math.min(el.scrollHeight, 100) + 'px';
+}
+
+// ─────────────────────────────────────────
+// ALERTS MODAL
+// ─────────────────────────────────────────
+const ALERT_DATA = {
+  ladyday: {
+    emoji: '👑',
+    title: 'Lady Day — 3 mai 2026',
+    sub: 'Événement annuel Zawaj Secret\'s',
+    body: `<div style="margin-bottom:16px"><div style="font-size:16px;font-weight:600;color:var(--rose);margin-bottom:8px">Actions à lancer MAINTENANT</div>
+<div class="task-item" style="margin-bottom:8px;box-shadow:none;border:1px solid var(--border)"><span>📱 Post Instagram Lady Day — hook choc + code</span></div>
+<div class="task-item" style="margin-bottom:8px;box-shadow:none;border:1px solid var(--border)"><span>📧 Email blast 487 abonnées — sujet percutant</span></div>
+<div class="task-item" style="margin-bottom:8px;box-shadow:none;border:1px solid var(--border)"><span>📊 Story interactive avec compte à rebours</span></div>
+<div class="task-item" style="box-shadow:none;border:1px solid var(--border)"><span>🏷️ Activer code LADYDAY20 sur Shopify</span></div>
+</div>
+<div style="background:var(--rose-light);border-radius:12px;padding:12px;font-size:12px;color:var(--text-2)">💡 Demande à l'Agente Stratégie CEO ton plan d'action complet Lady Day.</div>`
+  },
+  frenchdays: {
+    emoji: '🛍️',
+    title: 'French Days — Fin mai 2026',
+    sub: 'Campagne promo nationale',
+    body: `<div style="margin-bottom:16px"><div style="font-size:16px;font-weight:600;color:#f97316;margin-bottom:8px">Préparer d'ici le 20 mai</div>
+<div class="task-item" style="margin-bottom:8px;box-shadow:none;border:1px solid #FFE8D0"><span>🎨 Visuels Canva aux couleurs French Days</span></div>
+<div class="task-item" style="margin-bottom:8px;box-shadow:none;border:1px solid #FFE8D0"><span>📧 Flow Klaviyo dédié (3 emails min)</span></div>
+<div class="task-item" style="margin-bottom:8px;box-shadow:none;border:1px solid #FFE8D0"><span>📱 Série de stories countdown (J-7, J-3, J-1)</span></div>
+<div class="task-item" style="box-shadow:none;border:1px solid #FFE8D0"><span>🎯 Budget Meta Ads 200€ minimum</span></div>
+</div>
+<div style="background:#FFF8F0;border-radius:12px;padding:12px;font-size:12px;color:var(--text-2)">Code recommandé : <strong>PERLE20</strong> — 20% de réduction sur toute la boutique.</div>`
+  },
+  codes: {
+    emoji: '🏷️',
+    title: 'Codes Shopify actifs',
+    sub: '3 codes promo en cours',
+    body: `<div>
+<div style="background:var(--rose-light);border-radius:12px;padding:14px;margin-bottom:10px">
+<div style="font-size:18px;font-weight:700;color:var(--rose);font-family:'Cormorant Garamond',serif">PERLE10</div>
+<div style="font-size:12px;color:var(--text-2);margin-top:2px">10% de réduction — toujours actif</div>
+</div>
+<div style="background:var(--rose-light);border-radius:12px;padding:14px;margin-bottom:10px">
+<div style="font-size:18px;font-weight:700;color:var(--rose);font-family:'Cormorant Garamond',serif">PERLE20</div>
+<div style="font-size:12px;color:var(--text-2);margin-top:2px">20% de réduction — French Days & événements</div>
+</div>
+<div style="background:var(--rose-light);border-radius:12px;padding:14px;margin-bottom:10px">
+<div style="font-size:18px;font-weight:700;color:var(--rose);font-family:'Cormorant Garamond',serif">RITUAL15</div>
+<div style="font-size:12px;color:var(--text-2);margin-top:2px">15% de réduction — kit rituel intime</div>
+</div>
+<div style="font-size:11px;color:var(--text-3);text-align:center;margin-top:8px">À vérifier dans ton back-office Shopify</div>
+</div>`
+  }
+};
+
+function openAlert(id) {
+  const data = ALERT_DATA[id];
+  if (!data) return;
+  document.getElementById('alert-emoji').textContent = data.emoji;
+  document.getElementById('alert-title').textContent = data.title;
+  document.getElementById('alert-sub').textContent = data.sub;
+  document.getElementById('alert-body-content').innerHTML = data.body;
+  document.getElementById('modal-alert').classList.add('open');
+}
+
+function closeAlert() {
+  document.getElementById('modal-alert').classList.remove('open');
+}
+
+// ─────────────────────────────────────────
+// DUAS
+// ─────────────────────────────────────────
+function renderDua() {
+  document.getElementById('dua-arabic').textContent = DUAS[currentDua].ar;
+  document.getElementById('dua-fr').textContent = DUAS[currentDua].fr;
+  const dots = document.getElementById('dua-dots');
+  dots.innerHTML = DUAS.map((_, i) =>
+    `<div class="dua-dot ${i === currentDua ? 'active' : ''}" onclick="setDua(${i})"></div>`
+  ).join('');
+}
+
+function setDua(i) { currentDua = i; renderDua(); }
+
+function nextDua() {
+  currentDua = (currentDua + 1) % DUAS.length;
+  renderDua();
+}
+
+// ─────────────────────────────────────────
+// API KEY MANAGEMENT
+// ─────────────────────────────────────────
+function showApiKeyModal() {
+  const m = document.getElementById('modal-apikey');
+  m.style.display = 'flex';
+  setTimeout(() => document.getElementById('apikey-input').focus(), 200);
+}
+
+function saveApiKey() {
+  const val = document.getElementById('apikey-input').value.trim();
+  if (!val || !val.startsWith('sk-')) {
+    document.getElementById('apikey-input').style.borderColor = '#ef4444';
+    return;
+  }
+  API_KEY = val;
+  localStorage.setItem('zawaj_api_key', val);
+  document.getElementById('modal-apikey').style.display = 'none';
+}
+
+function resetApiKey() {
+  localStorage.removeItem('zawaj_api_key');
+  API_KEY = '';
+  showApiKeyModal();
+}
+
+// ─────────────────────────────────────────
+// REMINDERS PERSISTENCE
+// ─────────────────────────────────────────
+function saveReminders() {
+  const state = {};
+  ['ig','nl','fajr','kpi','fd'].forEach(id => {
+    const el = document.getElementById('rem-' + id);
+    if (el) state[id] = el.checked;
+  });
+  localStorage.setItem('zawaj_reminders', JSON.stringify(state));
+}
+
+function loadReminders() {
+  const saved = JSON.parse(localStorage.getItem('zawaj_reminders') || '{}');
+  Object.entries(saved).forEach(([id, val]) => {
+    const el = document.getElementById('rem-' + id);
+    if (el) el.checked = val;
+  });
+}
+
+// ─────────────────────────────────────────
+// INIT
+// ─────────────────────────────────────────
+function init() {
+  // Header date
+  document.getElementById('header-date').textContent = 'CEO Dashboard • 1er mai 2026';
+
+  // KPI counters
+  setTimeout(() => {
+    animateCounter(document.getElementById('kpi-klaviyo'), 487);
+    const igEl = document.getElementById('kpi-ig');
+    igEl.textContent = '33K';
+    animateCounter(document.getElementById('kpi-flows'), 12);
+    animateCounter(document.getElementById('kpi-tpl'), 22);
+  }, 300);
+
+  // Calendar
+  renderCalendar();
+
+  // Tasks
+  renderTasks();
+
+  // Duas
+  renderDua();
+  setInterval(nextDua, 8000);
+
+  // Reminders
+  loadReminders();
+
+  // PWA
+  if ('serviceWorker' in navigator) {
+    navigator.serviceWorker.register('/sw.js').catch(() => {});
+  }
+
+  // Touch swipe for duas
+  const duaCard = document.getElementById('dua-card');
+  let touchX = 0;
+  duaCard.addEventListener('touchstart', e => touchX = e.touches[0].clientX, { passive: true });
+  duaCard.addEventListener('touchend', e => {
+    const diff = touchX - e.changedTouches[0].clientX;
+    if (Math.abs(diff) > 40) {
+      currentDua = diff > 0 ? (currentDua + 1) % DUAS.length : (currentDua - 1 + DUAS.length) % DUAS.length;
+      renderDua();
+    }
+  }, { passive: true });
+
+  // Clé API : afficher le modal si pas de clé
+  if (!API_KEY) setTimeout(showApiKeyModal, 800);
+
+  // Bouton reset clé API dans le header (long press)
+  document.querySelector('.header-badge').addEventListener('dblclick', resetApiKey);
+}
+
+document.addEventListener('DOMContentLoaded', init);
+</script>
+</body>
+</html>
