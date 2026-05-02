@@ -9,9 +9,13 @@ export default async function handler(req, res) {
   }
 
   try {
-    const reqBody = req.body;
-    console.log('Request body keys:', Object.keys(reqBody || {}));
-    console.log('Model:', reqBody?.model);
+    const reqBody = req.body || {};
+    // Force model to a valid one
+    if (!reqBody.model || reqBody.model.includes('claude')) {
+      reqBody.model = 'claude-3-5-sonnet-20241022';
+    }
+    
+    console.log('Calling Anthropic with model:', reqBody.model, 'messages count:', reqBody.messages?.length);
 
     const response = await fetch('https://api.anthropic.com/v1/messages', {
       method: 'POST',
@@ -24,10 +28,15 @@ export default async function handler(req, res) {
     });
 
     const data = await response.json();
-    console.log('Anthropic status:', response.status, 'error:', data?.error);
-    return res.status(response.status).json(data);
+    console.log('Anthropic response status:', response.status, 'error:', JSON.stringify(data?.error));
+    
+    // Always return 200 to avoid dashboard treating API errors as connection errors
+    return res.status(200).json(data);
   } catch (error) {
-    console.error('Error:', error.message);
-    return res.status(500).json({ error: error.message });
+    console.error('Handler error:', error.message);
+    return res.status(200).json({ 
+      error: { type: 'api_error', message: error.message },
+      content: [{ type: 'text', text: 'Erreur de connexion: ' + error.message }]
+    });
   }
 }
