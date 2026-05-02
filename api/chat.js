@@ -10,10 +10,8 @@ export default async function handler(req, res) {
 
   try {
     const reqBody = req.body;
-    // Force model if not provided
-    if (!reqBody.model) {
-      reqBody.model = 'claude-3-5-sonnet-20241022';
-    }
+    // Always force model to a known working version
+    reqBody.model = 'claude-3-5-sonnet-20241022';
     console.log('Model:', reqBody.model, 'Messages:', reqBody.messages?.length);
 
     const response = await fetch('https://api.anthropic.com/v1/messages', {
