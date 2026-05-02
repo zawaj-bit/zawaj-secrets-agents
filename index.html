@@ -718,7 +718,7 @@ input:checked+.toggle-slider::before{transform:translateX(20px)}
 // CONFIG
 // ─────────────────────────────────────────
 let API_KEY = localStorage.getItem('zawaj_api_key') || '';
-const MODEL = 'claude-sonnet-4-20250514';
+const MODEL = 'claude-sonnet-4-6';
 
 const BASE_CONTEXT = `Tu es une assistante IA experte de la marque Zawaj Secret's. Réponds toujours en français, de façon claire, actionnable et adaptée au mobile. Sois directe, efficace, et parle comme une grande sœur bienveillante.
 
@@ -1330,6 +1330,24 @@ async function sendMessage(id) {
 
     typingEl.remove();
 
+    // Vérifier que la réponse HTTP est OK avant de lire le stream
+    if (!res.ok) {
+      let errMsg = `Erreur API ${res.status}`;
+      try {
+        const errJson = await res.json();
+        errMsg = errJson?.error?.message || errMsg;
+      } catch {}
+      const errEl = document.createElement('div');
+      errEl.className = 'msg msg-assistant';
+      errEl.style.color = 'var(--rose)';
+      errEl.textContent = '❌ ' + errMsg;
+      msgs.appendChild(errEl);
+      sendBtn.disabled = false;
+      // Pop le message user de l'historique car on ne peut pas continuer
+      chatHistories[id].pop();
+      return;
+    }
+
     const assistantEl = document.createElement('div');
     assistantEl.className = 'msg msg-assistant';
     msgs.appendChild(assistantEl);
@@ -1337,20 +1355,23 @@ async function sendMessage(id) {
     let fullText = '';
     const reader = res.body.getReader();
     const decoder = new TextDecoder();
+    let buffer = '';
 
     while (true) {
       const { done, value } = await reader.read();
       if (done) break;
-      const lines = decoder.decode(value).split('\n');
+      buffer += decoder.decode(value, { stream: true });
+      const lines = buffer.split('\n');
+      buffer = lines.pop(); // garder la ligne incomplète pour le prochain chunk
       for (const line of lines) {
         if (!line.startsWith('data: ')) continue;
         const data = line.slice(6).trim();
-        if (data === '[DONE]' || !data) continue;
+        if (!data || data === '[DONE]') continue;
         try {
           const parsed = JSON.parse(data);
           if (parsed.type === 'content_block_delta' && parsed.delta?.type === 'text_delta') {
             fullText += parsed.delta.text;
-            assistantEl.innerHTML = formatMessage(fullText) + '<span style="opacity:0.5;animation:typing 1s infinite;display:inline-block">▍</span>';
+            assistantEl.innerHTML = formatMessage(fullText) + '<span style="opacity:0.4">▍</span>';
             msgs.scrollTop = msgs.scrollHeight;
           }
           if (parsed.type === 'message_stop') {
@@ -1360,16 +1381,23 @@ async function sendMessage(id) {
       }
     }
 
-    assistantEl.innerHTML = formatMessage(fullText);
-    chatHistories[id].push({ role: 'assistant', content: fullText });
+    // Finaliser au cas où message_stop n'a pas été reçu
+    if (fullText) {
+      assistantEl.innerHTML = formatMessage(fullText);
+      chatHistories[id].push({ role: 'assistant', content: fullText });
+    } else {
+      assistantEl.textContent = '(Réponse vide — réessaie)';
+      chatHistories[id].pop(); // retirer le message user orphelin
+    }
 
   } catch (err) {
     typingEl.remove();
     const errEl = document.createElement('div');
     errEl.className = 'msg msg-assistant';
     errEl.style.color = 'var(--rose)';
-    errEl.textContent = '❌ Erreur de connexion. Vérifie ta clé API et réessaie.';
+    errEl.textContent = '❌ Erreur réseau : ' + (err.message || 'vérifie ta connexion et ta clé API.');
     msgs.appendChild(errEl);
+    chatHistories[id].pop();
   }
 
   sendBtn.disabled = false;
