@@ -223,6 +223,52 @@ input:checked+.toggle-slider::before{transform:translateX(20px)}
 .scroll-hint{height:1px;flex-shrink:0}
 .mt-4{margin-top:16px}
 .flex-between{display:flex;align-items:center;justify-content:space-between}
+
+/* ── SPIRITUALITÉ ── */
+
+/* Ayat banner */
+.ayat-banner{background:linear-gradient(160deg,#1A0A14,#3D1529);border-radius:var(--r);padding:18px 18px 14px;margin-bottom:16px;position:relative;overflow:hidden}
+.ayat-banner::before{content:'✦';position:absolute;top:8px;right:14px;font-size:40px;color:rgba(255,255,255,0.06)}
+.ayat-label{font-size:10px;font-weight:600;color:rgba(242,196,206,0.7);text-transform:uppercase;letter-spacing:.1em;margin-bottom:10px}
+.ayat-arabic{font-size:19px;color:white;direction:rtl;line-height:1.8;text-align:right;margin-bottom:8px;font-weight:400}
+.ayat-ref{font-size:10px;color:var(--rose-mid);font-weight:600;letter-spacing:.05em;margin-bottom:6px;text-align:right}
+.ayat-fr{font-size:12px;color:rgba(255,255,255,0.72);line-height:1.6;font-style:italic;border-left:2px solid var(--rose);padding-left:10px;margin-top:4px}
+
+/* Dua card override */
+.dua-card{cursor:pointer}
+.dua-source{font-size:10px;font-weight:600;color:rgba(255,255,255,0.6);text-transform:uppercase;letter-spacing:.1em;margin-bottom:8px}
+
+/* Tasbih */
+.tasbih-wrap{display:flex;flex-direction:column;align-items:center;margin-bottom:20px}
+.tasbih-card{width:100%;background:linear-gradient(135deg,var(--rose),#C4365F);border-radius:var(--r);padding:24px 20px 20px;text-align:center;position:relative;cursor:pointer;user-select:none;-webkit-user-select:none}
+.tasbih-card:active{transform:scale(0.98)}
+.tasbih-arabic{font-size:24px;color:white;font-weight:500;direction:rtl;margin-bottom:4px}
+.tasbih-fr{font-size:12px;color:rgba(255,255,255,0.75);margin-bottom:16px}
+.tasbih-count{font-family:'Cormorant Garamond',serif;font-size:56px;font-weight:700;color:white;line-height:1;display:inline-block}
+.tasbih-target{font-size:16px;color:rgba(255,255,255,0.6);margin-left:4px;display:inline-block;vertical-align:bottom;padding-bottom:8px}
+.tasbih-btn{position:relative;margin-top:16px;width:60px;height:60px;border-radius:50%;background:rgba(255,255,255,0.2);border:none;cursor:pointer;font-size:24px;display:flex;align-items:center;justify-content:center;transition:all 0.1s;color:white;backdrop-filter:blur(4px)}
+.tasbih-btn:active{transform:scale(0.9);background:rgba(255,255,255,0.35)}
+.tasbih-progress-ring{position:absolute;bottom:32px;left:50%;transform:translateX(-50%)}
+.tasbih-nav{display:flex;align-items:center;gap:16px;margin-top:12px;width:100%;justify-content:center}
+.tasbih-switch{background:var(--rose-light);border:none;border-radius:8px;width:36px;height:36px;cursor:pointer;color:var(--rose);font-size:18px;display:flex;align-items:center;justify-content:center}
+.tasbih-reset{margin-top:6px;background:none;border:1px solid var(--border);border-radius:20px;padding:6px 18px;font-size:11px;color:var(--text-3);cursor:pointer;font-family:'DM Sans',sans-serif}
+
+/* Wird quotidien */
+.wird-item{display:flex;align-items:flex-start;gap:12px;padding:12px 14px;background:var(--white);border-radius:var(--r-sm);margin-bottom:6px;box-shadow:0 1px 6px rgba(232,67,122,0.07);cursor:pointer;transition:all 0.15s}
+.wird-item:active{transform:scale(0.99)}
+.wird-check{width:22px;height:22px;border-radius:50%;border:2px solid var(--rose-mid);display:flex;align-items:center;justify-content:center;flex-shrink:0;transition:all 0.2s;background:white;margin-top:1px}
+.wird-check.checked{background:var(--rose);border-color:var(--rose)}
+.wird-check svg{width:11px;height:11px;stroke:white;fill:none;stroke-width:2.5;stroke-linecap:round;stroke-linejoin:round;opacity:0;transition:opacity 0.15s}
+.wird-check.checked svg{opacity:1}
+.wird-body{flex:1}
+.wird-title{font-size:13px;font-weight:500;color:var(--text)}
+.wird-arabic-small{font-size:15px;color:var(--rose);direction:rtl;line-height:1.6;margin-top:2px}
+.wird-sub{font-size:11px;color:var(--text-2);margin-top:2px;line-height:1.4}
+.wird-item.done .wird-title{text-decoration:line-through;color:var(--text-3)}
+.wird-item.done .wird-arabic-small{opacity:0.4}
+.wird-progress{display:flex;align-items:center;gap:8px;margin-bottom:10px}
+.wird-bar-bg{flex:1;height:6px;background:var(--rose-light);border-radius:10px;overflow:hidden}
+.wird-bar-fill{height:100%;background:linear-gradient(90deg,var(--rose),#FF6B9D);border-radius:10px;transition:width 0.4s ease}
 </style>
 </head>
 <body>
@@ -387,17 +433,72 @@ input:checked+.toggle-slider::before{transform:translateX(20px)}
   </div>
 </div>
 
-<!-- SCREEN 5 — RAPPELS -->
+<!-- SCREEN 5 — NOUR (spiritualité) -->
 <div class="screen" id="screen-reminders">
-  <div class="section-title">Doua <span>du jour</span></div>
 
-  <div class="dua-card" id="dua-card">
+  <!-- Ayat du jour -->
+  <div class="ayat-banner" id="ayat-banner">
+    <div class="ayat-label">✦ Ayat du jour</div>
+    <div class="ayat-arabic" id="ayat-arabic"></div>
+    <div class="ayat-ref" id="ayat-ref"></div>
+    <div class="ayat-fr" id="ayat-fr"></div>
+  </div>
+
+  <!-- Doua rotative -->
+  <div class="section-title" style="margin-top:4px">Doua <span>pour le rizq</span></div>
+  <div class="dua-card" id="dua-card" onclick="nextDua()">
+    <div class="dua-source" id="dua-source"></div>
     <div class="dua-arabic" id="dua-arabic"></div>
     <div class="dua-fr" id="dua-fr"></div>
+    <div style="font-size:10px;color:rgba(255,255,255,0.55);margin-top:10px">← glisse ou appuie pour changer →</div>
     <div class="dua-dots" id="dua-dots"></div>
   </div>
 
-  <div class="section-title">Rappels <span>hebdo</span></div>
+  <!-- Tasbih / Dhikr counter -->
+  <div class="section-title">Dhikr <span>du jour</span></div>
+  <div class="tasbih-wrap">
+    <div class="tasbih-card" id="tasbih-card">
+      <div class="tasbih-arabic" id="tasbih-arabic">سُبْحَانَ اللَّهِ</div>
+      <div class="tasbih-fr" id="tasbih-fr">Subhan Allah</div>
+      <div class="tasbih-count" id="tasbih-count">0</div>
+      <div class="tasbih-target" id="tasbih-target">/ 33</div>
+      <button class="tasbih-btn" onclick="incrementTasbih()" id="tasbih-btn">
+        <span>☽</span>
+      </button>
+      <div class="tasbih-progress-ring">
+        <svg width="56" height="56" style="position:absolute;top:-4px;left:-4px">
+          <circle cx="28" cy="28" r="26" fill="none" stroke="rgba(255,255,255,0.2)" stroke-width="3"/>
+          <circle cx="28" cy="28" r="26" fill="none" stroke="white" stroke-width="3"
+            stroke-dasharray="163.4" id="tasbih-ring" stroke-dashoffset="163.4"
+            stroke-linecap="round" transform="rotate(-90 28 28)"/>
+        </svg>
+      </div>
+    </div>
+    <div class="tasbih-nav">
+      <button class="tasbih-switch" onclick="switchDhikr(-1)">‹</button>
+      <span id="tasbih-name-label" style="font-size:11px;color:var(--text-2)"></span>
+      <button class="tasbih-switch" onclick="switchDhikr(1)">›</button>
+    </div>
+    <button class="tasbih-reset" onclick="resetTasbih()">Réinitialiser</button>
+  </div>
+
+  <!-- Wird quotidien -->
+  <div class="section-title">Wird <span>quotidien</span></div>
+  <div id="wird-container"></div>
+
+  <!-- Rappels business -->
+  <div class="section-title" style="margin-top:8px">Rappels <span>business</span></div>
+
+  <div class="reminder-item">
+    <div class="reminder-left">
+      <span class="reminder-icon">🌅</span>
+      <div>
+        <div class="reminder-title">Fajr + Azkar as-sabah</div>
+        <div class="reminder-sub">Rappel à 5h00 — commence la journée avec Allah</div>
+      </div>
+    </div>
+    <label class="toggle"><input type="checkbox" onchange="saveReminders()" id="rem-fajr"><span class="toggle-slider"></span></label>
+  </div>
 
   <div class="reminder-item">
     <div class="reminder-left">
@@ -423,17 +524,6 @@ input:checked+.toggle-slider::before{transform:translateX(20px)}
 
   <div class="reminder-item">
     <div class="reminder-left">
-      <span class="reminder-icon">🌙</span>
-      <div>
-        <div class="reminder-title">Fajr reminder</div>
-        <div class="reminder-sub">Rappel à 5h00</div>
-      </div>
-    </div>
-    <label class="toggle"><input type="checkbox" onchange="saveReminders()" id="rem-fajr"><span class="toggle-slider"></span></label>
-  </div>
-
-  <div class="reminder-item">
-    <div class="reminder-left">
       <span class="reminder-icon">📊</span>
       <div>
         <div class="reminder-title">Revue KPIs hebdo</div>
@@ -453,6 +543,8 @@ input:checked+.toggle-slider::before{transform:translateX(20px)}
     </div>
     <label class="toggle"><input type="checkbox" checked onchange="saveReminders()" id="rem-fd"><span class="toggle-slider"></span></label>
   </div>
+
+  <div style="height:8px"></div>
 </div>
 
 </div><!-- end screens -->
@@ -487,7 +579,7 @@ input:checked+.toggle-slider::before{transform:translateX(20px)}
     <div class="nav-icon">
       <svg viewBox="0 0 24 24"><path d="M18 8A6 6 0 006 8c0 7-3 9-3 9h18s-3-2-3-9"/><path d="M13.73 21a2 2 0 01-3.46 0"/></svg>
     </div>
-    <span class="nav-label">Rappels</span>
+    <span class="nav-label">Nour</span>
   </div>
 </nav>
 
@@ -817,15 +909,106 @@ const CAL_EVENTS = {
   '2026-05-30': [{ title: '📧 Newsletter French Days', badge: 'badge-orange', desc: 'Dernier email promo avant clôture' }]
 };
 
+// ─── Ayat (versets pour le rizq & la bénédiction) ───
+const AYAT = [
+  {
+    ar: 'وَمَن يَتَّقِ اللَّهَ يَجْعَل لَّهُ مَخْرَجًا ۝ وَيَرْزُقْهُ مِنْ حَيْثُ لَا يَحْتَسِبُ',
+    ref: 'Sourate At-Talaq • 65:2-3',
+    fr: 'Quiconque craint Allah, Il lui ménage une issue et lui accorde une subsistance de là où il ne comptait point.'
+  },
+  {
+    ar: 'وَإِذْ تَأَذَّنَ رَبُّكُمْ لَئِن شَكَرْتُمْ لَأَزِيدَنَّكُمْ',
+    ref: 'Sourate Ibrahim • 14:7',
+    fr: 'Si vous êtes reconnaissants, très certainement J\'augmenterai Mes bienfaits pour vous.'
+  },
+  {
+    ar: 'إِنَّ مَعَ الْعُسْرِ يُسْرًا',
+    ref: 'Sourate Al-Inshirah • 94:6',
+    fr: 'Certes, avec la difficulté vient la facilité.'
+  },
+  {
+    ar: 'وَعَلَى اللَّهِ فَتَوَكَّلُوا إِن كُنتُم مُّؤْمِنِينَ',
+    ref: 'Sourate Al-Maida • 5:23',
+    fr: 'Placez votre confiance en Allah si vous êtes croyants.'
+  },
+  {
+    ar: 'وَاسْتَعِينُوا بِالصَّبْرِ وَالصَّلَاةِ',
+    ref: 'Sourate Al-Baqara • 2:45',
+    fr: 'Cherchez le secours dans la patience et la Prière.'
+  },
+  {
+    ar: 'أَلَا بِذِكْرِ اللَّهِ تَطْمَئِنُّ الْقُلُوبُ',
+    ref: 'Sourate Ar-Ra\'d • 13:28',
+    fr: 'C\'est par l\'invocation d\'Allah que les cœurs se tranquillisent.'
+  }
+];
+
+// ─── Duas pour le rizq et la bénédiction ───
 const DUAS = [
-  { ar: 'بِسْمِ اللَّهِ الرَّحْمَنِ الرَّحِيمِ', fr: 'Au nom d\'Allah, le Tout Miséricordieux, le Très Miséricordieux.' },
-  { ar: 'رَبِّ زِدْنِي عِلْمًا', fr: 'Mon Seigneur, accroîs ma science.' },
-  { ar: 'حَسْبُنَا اللَّهُ وَنِعْمَ الْوَكِيلُ', fr: 'Allah nous suffit, Il est le meilleur garant.' },
-  { ar: 'اللَّهُمَّ أَعِنِّي عَلَى ذِكْرِكَ وَشُكْرِكَ وَحُسْنِ عِبَادَتِكَ', fr: 'Ô Allah, aide-moi à Te rappeler, à T\'être reconnaissant et à bien T\'adorer.' },
-  { ar: 'رَبَّنَا آتِنَا فِي الدُّنْيَا حَسَنَةً وَفِي الْآخِرَةِ حَسَنَةً', fr: 'Seigneur, accorde-nous le meilleur en ce monde et le meilleur dans l\'Au-delà.' }
+  {
+    source: 'Doua rizq — Hisnul Muslim',
+    ar: 'اللَّهُمَّ اكْفِنِي بِحَلالِكَ عَنْ حَرامِكَ وَأَغْنِنِي بِفَضْلِكَ عَمَّنْ سِوَاكَ',
+    fr: 'Ô Allah, comble-moi par ce que Tu as rendu licite et préserve-moi de ce que Tu as rendu illicite. Enrichis-moi par Ta grâce et dispense-moi de tout autre que Toi.'
+  },
+  {
+    source: 'Doua barakah dans le business',
+    ar: 'اللَّهُمَّ بَارِكْ لِي فِيمَا رَزَقْتَنِي وَقِنِي عَذَابَ النَّارِ',
+    fr: 'Ô Allah, bénis-moi dans ce que Tu m\'as accordé comme subsistance, et préserve-moi du châtiment du Feu.'
+  },
+  {
+    source: 'Doua tawakkul & confiance',
+    ar: 'حَسْبُنَا اللَّهُ وَنِعْمَ الْوَكِيلُ نِعْمَ الْمَوْلَى وَنِعْمَ النَّصِيرُ',
+    fr: 'Allah nous suffit — quel excellent Protecteur, quel excellent Soutien ! (Ibrahim l\'a dit en étant jeté au feu.)'
+  },
+  {
+    source: 'Doua ouverture des portes',
+    ar: 'اللَّهُمَّ افْتَحْ لَنَا أَبْوَابَ رَحْمَتِكَ وَيَسِّرْ لَنَا أَبْوَابَ رِزْقِكَ',
+    fr: 'Ô Allah, ouvre-nous les portes de Ta miséricorde et facilite-nous les portes de Ta subsistance.'
+  },
+  {
+    source: 'Istighfar & rizq — Ibn Abbas',
+    ar: 'أَسْتَغْفِرُ اللَّهَ الْعَظِيمَ الَّذِي لَا إِلَهَ إِلَّا هُوَ الْحَيَّ الْقَيُّومَ وَأَتُوبُ إِلَيْهِ',
+    fr: 'Je demande pardon à Allah l\'Immense — pas de divinité sauf Lui, le Vivant, le Subsistant — et je me repens à Lui. (L\'istighfar ouvre les portes du rizq.)'
+  },
+  {
+    source: 'Doua du matin pour la barakah',
+    ar: 'اللَّهُمَّ إِنِّي أَسْأَلُكَ عِلْمًا نَافِعًا وَرِزْقًا طَيِّبًا وَعَمَلًا مُتَقَبَّلًا',
+    fr: 'Ô Allah, je Te demande une science utile, une subsistance bonne et pure, et une œuvre agréée.'
+  },
+  {
+    source: 'Doua Karim — sourate Al-Isra',
+    ar: 'رَبِّ أَدْخِلْنِي مُدْخَلَ صِدْقٍ وَأَخْرِجْنِي مُخْرَجَ صِدْقٍ وَاجْعَل لِّي مِن لَّدُنكَ سُلْطَانًا نَّصِيرًا',
+    fr: 'Seigneur, fais-moi entrer d\'une entrée sincère, fais-moi sortir d\'une sortie sincère, et accorde-moi de Ta part un pouvoir secourable.'
+  }
+];
+
+// ─── Dhikr pour le tasbih ───
+const DHIKR = [
+  { ar: 'سُبْحَانَ اللَّهِ', fr: 'Subhan Allah', target: 33, color: ['#6B4FA0','#9B7DC8'] },
+  { ar: 'الْحَمْدُ لِلَّهِ', fr: 'Alhamdulillah', target: 33, color: ['#2E7D52','#4CAF80'] },
+  { ar: 'اللَّهُ أَكْبَرُ', fr: 'Allahu Akbar', target: 34, color: ['#C4365F','#E8437A'] },
+  { ar: 'لَا إِلَهَ إِلَّا اللَّهُ', fr: 'La ilaha illallah', target: 100, color: ['#1A5C8A','#2196C4'] },
+  { ar: 'أَسْتَغْفِرُ اللَّهَ', fr: 'Astaghfirullah', target: 70, color: ['#7B5200','#C4830A'] },
+  { ar: 'لَا حَوْلَ وَلَا قُوَّةَ إِلَّا بِاللَّهِ', fr: 'La hawla wa la quwwata…', target: 33, color: ['#4A1040','#8B2570'] }
+];
+
+// ─── Wird quotidien ───
+const WIRD_ITEMS = [
+  { id: 'w1', title: 'Fajr', arabic: 'صَلَاةُ الفَجْر', sub: '2 rak\'at sunna + 2 fard — avant lever du soleil', icon: '🌅' },
+  { id: 'w2', title: 'Azkar as-sabah', arabic: 'أَذْكَارُ الصَّبَاح', sub: 'Ayat Al-Kursi × 1 + 3 Quls × 3 + Hasbiyallah × 7', icon: '☀️' },
+  { id: 'w3', title: 'Istighfar matin', arabic: 'أَسْتَغْفِرُ اللَّهَ', sub: '100 fois — ouvre les portes du rizq (Ibn Abbas)', icon: '🤲' },
+  { id: 'w4', title: 'Salawat sur le Prophète ﷺ', arabic: 'اللَّهُمَّ صَلِّ عَلَى مُحَمَّد', sub: '10 fois le matin — 10 fois le soir', icon: '💚' },
+  { id: 'w5', title: 'Dhuhr + Asr', arabic: 'صَلَاةُ الظُّهْر وَالعَصْر', sub: 'Prière du milieu de journée', icon: '🕌' },
+  { id: 'w6', title: 'Lecture Coran', arabic: 'تِلَاوَةُ القُرْآن', sub: 'Au moins 1 page — cherche la sourate Al-Waqia pour le rizq', icon: '📖' },
+  { id: 'w7', title: 'Sadaqa quotidienne', arabic: 'الصَّدَقَة', sub: 'Même petite — efface les fautes et attire la barakah', icon: '🌸' },
+  { id: 'w8', title: 'Azkar al-massa', arabic: 'أَذْكَارُ المَسَاء', sub: 'Le soir — protection, paix, reconnaissance', icon: '🌙' }
 ];
 
 let currentDua = 0;
+let currentAyat = 0;
+let currentDhikrIdx = 0;
+let tasbihCounts = JSON.parse(localStorage.getItem('zawaj_tasbih') || '{}');
+let wirdState = JSON.parse(localStorage.getItem('zawaj_wird') || '{}');
 
 // ─────────────────────────────────────────
 // NAVIGATION
@@ -844,7 +1027,7 @@ const HEADER_TITLES = {
   agenda: { title: 'Agenda', sub: 'Mai 2026 — Lady Day & French Days' },
   tasks: { title: 'Tâches', sub: 'Priorités du jour' },
   agents: { title: 'Agents IA', sub: '5 expertes à ton service' },
-  reminders: { title: 'Rappels', sub: 'Doua + notifications'  }
+  reminders: { title: 'Nour — نور', sub: 'Spiritualité · Wird · Dhikr · Rizq' }
 };
 
 function updateHeader(id) {
@@ -1280,14 +1463,25 @@ function closeAlert() {
 }
 
 // ─────────────────────────────────────────
-// DUAS
+// SPIRITUALITÉ — AYAT, DUAS, TASBIH, WIRD
 // ─────────────────────────────────────────
+
+function renderAyat() {
+  const a = AYAT[currentAyat];
+  document.getElementById('ayat-arabic').textContent = a.ar;
+  document.getElementById('ayat-ref').textContent = a.ref;
+  document.getElementById('ayat-fr').textContent = a.fr;
+}
+
 function renderDua() {
-  document.getElementById('dua-arabic').textContent = DUAS[currentDua].ar;
-  document.getElementById('dua-fr').textContent = DUAS[currentDua].fr;
+  const d = DUAS[currentDua];
+  const sourceEl = document.getElementById('dua-source');
+  if (sourceEl) sourceEl.textContent = d.source;
+  document.getElementById('dua-arabic').textContent = d.ar;
+  document.getElementById('dua-fr').textContent = d.fr;
   const dots = document.getElementById('dua-dots');
   dots.innerHTML = DUAS.map((_, i) =>
-    `<div class="dua-dot ${i === currentDua ? 'active' : ''}" onclick="setDua(${i})"></div>`
+    `<div class="dua-dot ${i === currentDua ? 'active' : ''}" onclick="event.stopPropagation();setDua(${i})"></div>`
   ).join('');
 }
 
@@ -1296,6 +1490,95 @@ function setDua(i) { currentDua = i; renderDua(); }
 function nextDua() {
   currentDua = (currentDua + 1) % DUAS.length;
   renderDua();
+}
+
+// ─── Tasbih ───
+function renderTasbih() {
+  const d = DHIKR[currentDhikrIdx];
+  const key = 'dhikr_' + currentDhikrIdx;
+  const count = tasbihCounts[key] || 0;
+  const card = document.getElementById('tasbih-card');
+  card.style.background = `linear-gradient(135deg, ${d.color[0]}, ${d.color[1]})`;
+  document.getElementById('tasbih-arabic').textContent = d.ar;
+  document.getElementById('tasbih-fr').textContent = d.fr;
+  document.getElementById('tasbih-count').textContent = count;
+  document.getElementById('tasbih-target').textContent = '/ ' + d.target;
+  document.getElementById('tasbih-name-label').textContent = (currentDhikrIdx + 1) + ' / ' + DHIKR.length;
+  const circumference = 163.4;
+  const pct = Math.min(count / d.target, 1);
+  document.getElementById('tasbih-ring').style.strokeDashoffset = circumference * (1 - pct);
+}
+
+function incrementTasbih() {
+  const d = DHIKR[currentDhikrIdx];
+  const key = 'dhikr_' + currentDhikrIdx;
+  tasbihCounts[key] = (tasbihCounts[key] || 0) + 1;
+  if (tasbihCounts[key] > d.target) tasbihCounts[key] = 0;
+  localStorage.setItem('zawaj_tasbih', JSON.stringify(tasbihCounts));
+  renderTasbih();
+  // vibration légère
+  if (navigator.vibrate) navigator.vibrate(15);
+}
+
+function resetTasbih() {
+  const key = 'dhikr_' + currentDhikrIdx;
+  tasbihCounts[key] = 0;
+  localStorage.setItem('zawaj_tasbih', JSON.stringify(tasbihCounts));
+  renderTasbih();
+}
+
+function switchDhikr(dir) {
+  currentDhikrIdx = (currentDhikrIdx + dir + DHIKR.length) % DHIKR.length;
+  renderTasbih();
+}
+
+// ─── Wird quotidien ───
+function getTodayKey() {
+  const d = new Date();
+  return `${d.getFullYear()}-${d.getMonth()}-${d.getDate()}`;
+}
+
+function renderWird() {
+  const container = document.getElementById('wird-container');
+  if (!container) return;
+  const today = getTodayKey();
+  if (!wirdState[today]) wirdState[today] = {};
+  const state = wirdState[today];
+
+  const done = WIRD_ITEMS.filter(w => state[w.id]).length;
+  const pct = Math.round(done / WIRD_ITEMS.length * 100);
+
+  let html = `<div class="wird-progress">
+    <div class="wird-bar-bg"><div class="wird-bar-fill" style="width:${pct}%"></div></div>
+    <span style="font-size:11px;color:var(--text-2);white-space:nowrap;font-weight:500">${done}/${WIRD_ITEMS.length}</span>
+  </div>`;
+
+  WIRD_ITEMS.forEach(w => {
+    const checked = !!state[w.id];
+    html += `<div class="wird-item ${checked ? 'done' : ''}" onclick="toggleWird('${w.id}')">
+      <div class="wird-check ${checked ? 'checked' : ''}">
+        <svg viewBox="0 0 12 9"><polyline points="1 4 4.5 7.5 11 1"/></svg>
+      </div>
+      <div class="wird-body">
+        <div class="wird-title">${w.icon} ${w.title}</div>
+        <div class="wird-arabic-small">${w.arabic}</div>
+        <div class="wird-sub">${w.sub}</div>
+      </div>
+    </div>`;
+  });
+
+  container.innerHTML = html;
+}
+
+function toggleWird(id) {
+  const today = getTodayKey();
+  if (!wirdState[today]) wirdState[today] = {};
+  wirdState[today][id] = !wirdState[today][id];
+  // Nettoyer les jours anciens (garder seulement aujourd'hui)
+  const keys = Object.keys(wirdState).filter(k => k !== today);
+  keys.forEach(k => delete wirdState[k]);
+  localStorage.setItem('zawaj_wird', JSON.stringify(wirdState));
+  renderWird();
 }
 
 // ─────────────────────────────────────────
@@ -1366,9 +1649,13 @@ function init() {
   // Tasks
   renderTasks();
 
-  // Duas
+  // Spiritualité
+  currentAyat = Math.floor(Math.random() * AYAT.length);
+  renderAyat();
   renderDua();
-  setInterval(nextDua, 8000);
+  renderTasbih();
+  renderWird();
+  setInterval(nextDua, 10000);
 
   // Reminders
   loadReminders();
@@ -1378,10 +1665,10 @@ function init() {
     navigator.serviceWorker.register('/sw.js').catch(() => {});
   }
 
-  // Touch swipe for duas
+  // Swipe dua card
   const duaCard = document.getElementById('dua-card');
   let touchX = 0;
-  duaCard.addEventListener('touchstart', e => touchX = e.touches[0].clientX, { passive: true });
+  duaCard.addEventListener('touchstart', e => { touchX = e.touches[0].clientX; }, { passive: true });
   duaCard.addEventListener('touchend', e => {
     const diff = touchX - e.changedTouches[0].clientX;
     if (Math.abs(diff) > 40) {
@@ -1390,10 +1677,24 @@ function init() {
     }
   }, { passive: true });
 
+  // Swipe ayat banner
+  const ayatBanner = document.getElementById('ayat-banner');
+  if (ayatBanner) {
+    let ax = 0;
+    ayatBanner.addEventListener('touchstart', e => { ax = e.touches[0].clientX; }, { passive: true });
+    ayatBanner.addEventListener('touchend', e => {
+      const diff = ax - e.changedTouches[0].clientX;
+      if (Math.abs(diff) > 40) {
+        currentAyat = diff > 0 ? (currentAyat + 1) % AYAT.length : (currentAyat - 1 + AYAT.length) % AYAT.length;
+        renderAyat();
+      }
+    }, { passive: true });
+  }
+
   // Clé API : afficher le modal si pas de clé
   if (!API_KEY) setTimeout(showApiKeyModal, 800);
 
-  // Bouton reset clé API dans le header (long press)
+  // Reset clé API (double-tap badge)
   document.querySelector('.header-badge').addEventListener('dblclick', resetApiKey);
 }
 
