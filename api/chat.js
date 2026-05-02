@@ -9,6 +9,10 @@ export default async function handler(req, res) {
   }
 
   try {
+    const reqBody = req.body;
+    console.log('Request body keys:', Object.keys(reqBody || {}));
+    console.log('Model:', reqBody?.model);
+
     const response = await fetch('https://api.anthropic.com/v1/messages', {
       method: 'POST',
       headers: {
@@ -16,12 +20,14 @@ export default async function handler(req, res) {
         'x-api-key': apiKey,
         'anthropic-version': '2023-06-01'
       },
-      body: JSON.stringify(req.body)
+      body: JSON.stringify(reqBody)
     });
 
     const data = await response.json();
+    console.log('Anthropic status:', response.status, 'error:', data?.error);
     return res.status(response.status).json(data);
   } catch (error) {
+    console.error('Error:', error.message);
     return res.status(500).json({ error: error.message });
   }
 }
