@@ -696,28 +696,10 @@ input:checked+.toggle-slider::before{transform:translateX(20px)}
   </div>
 </div>
 
-<!-- ── API KEY SETUP MODAL ── -->
-<div id="modal-apikey" class="modal-overlay" style="background:rgba(0,0,0,0.7);pointer-events:auto;display:none;align-items:flex-end">
-  <div class="modal-sheet" style="transform:translateY(0)">
-    <div class="modal-drag"></div>
-    <div style="padding:24px 20px">
-      <div style="text-align:center;margin-bottom:20px">
-        <div style="font-size:36px;margin-bottom:8px">🔑</div>
-        <div style="font-family:'Cormorant Garamond',serif;font-size:22px;font-weight:600;color:var(--text)">Clé API Anthropic</div>
-        <div style="font-size:12px;color:var(--text-2);margin-top:6px">Stockée localement sur ton appareil, jamais envoyée ailleurs.</div>
-      </div>
-      <input id="apikey-input" type="password" placeholder="sk-ant-api03-..." style="width:100%;border:1.5px solid var(--border);border-radius:var(--r-sm);padding:12px 14px;font-size:13px;color:var(--text);background:var(--rose-pale);font-family:'DM Sans',sans-serif;outline:none;margin-bottom:12px" oninput="this.style.borderColor='var(--rose)'">
-      <button onclick="saveApiKey()" style="width:100%;background:var(--rose);color:white;border:none;border-radius:var(--r-sm);padding:14px;font-size:14px;font-weight:600;font-family:'DM Sans',sans-serif;cursor:pointer;margin-bottom:10px">Enregistrer et commencer →</button>
-      <div style="font-size:11px;color:var(--text-3);text-align:center">Obtiens ta clé sur <strong>console.anthropic.com</strong></div>
-    </div>
-  </div>
-</div>
-
 <script>
 // ─────────────────────────────────────────
 // CONFIG
 // ─────────────────────────────────────────
-let API_KEY = localStorage.getItem('zawaj_api_key') || '';
 const MODEL = 'claude-sonnet-4-6';
 
 const BASE_CONTEXT = `Tu es une assistante IA experte de la marque Zawaj Secret's. Réponds toujours en français, de façon claire, actionnable et adaptée au mobile. Sois directe, efficace, et parle comme une grande sœur bienveillante.
@@ -1244,7 +1226,6 @@ function addTask() {
 // AGENTS / CHAT
 // ─────────────────────────────────────────
 function openAgent(id) {
-  if (!API_KEY) { showApiKeyModal(); return; }
   const modal = document.getElementById('modal-' + id);
   modal.classList.add('open');
   document.body.style.overflow = 'hidden';
@@ -1282,7 +1263,6 @@ function useQuickPrompt(id, text) {
 }
 
 async function sendMessage(id) {
-  if (!API_KEY) { showApiKeyModal(); return; }
   const input = document.getElementById('input-' + id);
   const text = input.value.trim();
   if (!text) return;
@@ -1311,18 +1291,13 @@ async function sendMessage(id) {
   chatHistories[id].push({ role: 'user', content: text });
 
   try {
-    const res = await fetch('https://api.anthropic.com/v1/messages', {
+    // Appel via le proxy Vercel /api/chat (évite CORS sur mobile Safari/Chrome)
+    const res = await fetch('/api/chat', {
       method: 'POST',
-      headers: {
-        'Content-Type': 'application/json',
-        'x-api-key': API_KEY,
-        'anthropic-version': '2023-06-01',
-        'anthropic-dangerous-direct-browser-use': 'true'
-      },
+      headers: { 'Content-Type': 'application/json' },
       body: JSON.stringify({
         model: MODEL,
         max_tokens: 2048,
-        stream: true,
         system: AGENTS[id].systemPrompt,
         messages: chatHistories[id].map(m => ({ role: m.role, content: m.content }))
       })
@@ -1330,72 +1305,39 @@ async function sendMessage(id) {
 
     typingEl.remove();
 
-    // Vérifier que la réponse HTTP est OK avant de lire le stream
+    const data = await res.json();
+
     if (!res.ok) {
-      let errMsg = `Erreur API ${res.status}`;
-      try {
-        const errJson = await res.json();
-        errMsg = errJson?.error?.message || errMsg;
-      } catch {}
+      const errMsg = data?.error?.message || data?.error || `Erreur API ${res.status}`;
       const errEl = document.createElement('div');
       errEl.className = 'msg msg-assistant';
       errEl.style.color = 'var(--rose)';
       errEl.textContent = '❌ ' + errMsg;
       msgs.appendChild(errEl);
-      sendBtn.disabled = false;
-      // Pop le message user de l'historique car on ne peut pas continuer
       chatHistories[id].pop();
+      sendBtn.disabled = false;
       return;
     }
 
+    const fullText = data?.content?.[0]?.text || '';
     const assistantEl = document.createElement('div');
     assistantEl.className = 'msg msg-assistant';
-    msgs.appendChild(assistantEl);
 
-    let fullText = '';
-    const reader = res.body.getReader();
-    const decoder = new TextDecoder();
-    let buffer = '';
-
-    while (true) {
-      const { done, value } = await reader.read();
-      if (done) break;
-      buffer += decoder.decode(value, { stream: true });
-      const lines = buffer.split('\n');
-      buffer = lines.pop(); // garder la ligne incomplète pour le prochain chunk
-      for (const line of lines) {
-        if (!line.startsWith('data: ')) continue;
-        const data = line.slice(6).trim();
-        if (!data || data === '[DONE]') continue;
-        try {
-          const parsed = JSON.parse(data);
-          if (parsed.type === 'content_block_delta' && parsed.delta?.type === 'text_delta') {
-            fullText += parsed.delta.text;
-            assistantEl.innerHTML = formatMessage(fullText) + '<span style="opacity:0.4">▍</span>';
-            msgs.scrollTop = msgs.scrollHeight;
-          }
-          if (parsed.type === 'message_stop') {
-            assistantEl.innerHTML = formatMessage(fullText);
-          }
-        } catch {}
-      }
-    }
-
-    // Finaliser au cas où message_stop n'a pas été reçu
     if (fullText) {
       assistantEl.innerHTML = formatMessage(fullText);
       chatHistories[id].push({ role: 'assistant', content: fullText });
     } else {
       assistantEl.textContent = '(Réponse vide — réessaie)';
-      chatHistories[id].pop(); // retirer le message user orphelin
+      chatHistories[id].pop();
     }
+    msgs.appendChild(assistantEl);
 
   } catch (err) {
     typingEl.remove();
     const errEl = document.createElement('div');
     errEl.className = 'msg msg-assistant';
     errEl.style.color = 'var(--rose)';
-    errEl.textContent = '❌ Erreur réseau : ' + (err.message || 'vérifie ta connexion et ta clé API.');
+    errEl.textContent = '❌ Erreur réseau : ' + (err.message || 'vérifie ta connexion.');
     msgs.appendChild(errEl);
     chatHistories[id].pop();
   }
@@ -1610,32 +1552,6 @@ function toggleWird(id) {
 }
 
 // ─────────────────────────────────────────
-// API KEY MANAGEMENT
-// ─────────────────────────────────────────
-function showApiKeyModal() {
-  const m = document.getElementById('modal-apikey');
-  m.style.display = 'flex';
-  setTimeout(() => document.getElementById('apikey-input').focus(), 200);
-}
-
-function saveApiKey() {
-  const val = document.getElementById('apikey-input').value.trim();
-  if (!val || !val.startsWith('sk-')) {
-    document.getElementById('apikey-input').style.borderColor = '#ef4444';
-    return;
-  }
-  API_KEY = val;
-  localStorage.setItem('zawaj_api_key', val);
-  document.getElementById('modal-apikey').style.display = 'none';
-}
-
-function resetApiKey() {
-  localStorage.removeItem('zawaj_api_key');
-  API_KEY = '';
-  showApiKeyModal();
-}
-
-// ─────────────────────────────────────────
 // REMINDERS PERSISTENCE
 // ─────────────────────────────────────────
 function saveReminders() {
@@ -1719,11 +1635,6 @@ function init() {
     }, { passive: true });
   }
 
-  // Clé API : afficher le modal si pas de clé
-  if (!API_KEY) setTimeout(showApiKeyModal, 800);
-
-  // Reset clé API (double-tap badge)
-  document.querySelector('.header-badge').addEventListener('dblclick', resetApiKey);
 }
 
 document.addEventListener('DOMContentLoaded', init);
